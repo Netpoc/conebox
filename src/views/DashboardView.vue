@@ -3,7 +3,7 @@
   <v-main fluid>
     <h1 class="ma-5">Admin Dashboard</h1>
     <v-row
-      class="flex-nowrap bg-surface-variant rounded-xl pa-5 ma-5"
+      class="flex-nowrap bg-grey-lighten-4 rounded-xl pa-5 ma-5"
       no-gutters
     >
       <v-col class="flex-grow-0 flex-shrink-0" cols="2">
@@ -15,6 +15,7 @@
               :value="item"
               color="primary"
               rounded="xl"
+              :to="item.to"
             >
               <template v-slot:prepend>
                 <v-icon :icon="item.icon"></v-icon>
@@ -31,9 +32,8 @@
         md="6"
         style="min-width: 100px; max-width: 100%"
       >
-        <v-sheet class="ma-2 d-flex rounded-lg justify-space-around">
-          <v-sheet
-            color="yellow"
+        <v-sheet class="ma-2 bg-grey-lighten-4 d-flex rounded-lg justify-space-around">
+          <v-sheet            
             class="rounded-xl pa-3 ma-3 d-flex align-center"
           >
             <v-sheet
@@ -50,8 +50,7 @@
             </div>
           </v-sheet>
 
-          <v-sheet
-            color="blue"
+          <v-sheet            
             class="rounded-xl pa-3 ma-3 d-flex align-center"
           >
             <v-sheet
@@ -69,7 +68,7 @@
           </v-sheet>
 
           <v-sheet
-            color="blue"
+            
             class="rounded-xl pa-3 ma-3 d-flex align-center"
           >
             <v-sheet
@@ -217,10 +216,10 @@ export default {
 
 
       items: [
-        { text: "Dashboard", icon: "mdi-clock" },
-        { text: "User Mangement", icon: "mdi-account" },
-        { text: "Reports", icon: "mdi-flag" },
-        { text: "Settings", icon: "mdi-flag" },
+        { text: "Dashboard", icon: "mdi-view-dashboard", to:"dashboard"},
+        { text: "User Mangement", icon: "mdi-account-wrench-outline", to:"user_manager" },
+        { text: "Reports", icon: "mdi-file-chart", to:"reports" },
+        { text: "Settings", icon: "mdi-cog", to:"settings" },
       ],
       tab: 'tab-1',
       tabs: [
