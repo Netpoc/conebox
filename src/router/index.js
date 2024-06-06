@@ -5,6 +5,8 @@ import Reports from '../views/Reports.vue'
 import Settings from '../views/Settings.vue'
 import Tenant_Dashboard from '../views/tenant/Tenant_Dash.vue'
 import Subsidiary_Page from '../views/tenant/SubsidiariesPage.vue'
+import App_User from '../views/tenant/App_User.vue'
+import Tenant_Setting from '../views/tenant/Tenant_Setting.vue'
 
 const routes = [
   {
@@ -45,6 +47,16 @@ const routes = [
     path: '/subsidiary_page',
     name: 'subsidiary_page',
     component: Subsidiary_Page
+  },
+  {
+    path: '/app_user',
+    name: 'app_user',
+    component: App_User
+  },
+  {
+    path: '/tenant_setting',
+    name: 'tenant_setting',
+    component: Tenant_Setting
   },
 ]
 

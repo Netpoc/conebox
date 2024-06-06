@@ -220,6 +220,7 @@ export default {
         { text: "User Mangement", icon: "mdi-account-wrench-outline", to:"user_manager" },
         { text: "Reports", icon: "mdi-file-chart", to:"reports" },
         { text: "Settings", icon: "mdi-cog", to:"settings" },
+        { text: "Logout", icon: "mdi-power-settings", to:"/" },
       ],
       tab: 'tab-1',
       tabs: [

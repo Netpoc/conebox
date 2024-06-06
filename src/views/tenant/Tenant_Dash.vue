@@ -101,6 +101,32 @@
       <v-col class="flex-grow-1 flex-shrink-0"
         md="4"
         style="min-width: 100px; max-width: 100%">
+        <v-sheet class="pa-5 ma-5 rounded-xl">
+            <div class="d-flex justify-space-between align-center">
+                <h2>Billings</h2>
+                <v-btn variant="text" size="small" class="rounded-xl">More</v-btn>
+            </div>
+            Company:             
+                <a-input class="mt-3" v-model:value="tenant" placeholder="Enter Company">
+                  <template #prefix>
+                    <UserOutlined />
+                  </template>
+                </a-input>
+                <a-space class="mt-3" direction="vertical" :size="12">
+                <a-range-picker v-model:value="value1" />
+                </a-space>
+                <a-form-item>
+                <a-button
+                  block
+                  html-type="submit"                  
+                  class="button mt-3"
+                >
+                  Generate Billing
+                </a-button>
+              </a-form-item>
+        </v-sheet>
+      </v-col>
+      <v-col class="flex-grow-0 flex-shrink-1" md="4" style="min-width: 100px">
 
       </v-col>
     </v-row>
@@ -119,3 +145,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+    .button {
+        background-color: #ffc107;
+    }
+</style>
