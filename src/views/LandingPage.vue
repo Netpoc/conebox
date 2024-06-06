@@ -49,7 +49,9 @@
                     <MailOutlined />
                   </template>
                 </a-input>
-              
+                <a-form-item class="ma-1">
+                  <a-checkbox v-model:checked="checked">Group option</a-checkbox>
+                </a-form-item>         
               <a-form-item>
                 <a-button
                   block
@@ -99,6 +101,7 @@
                 </template>
               </a-input-password>
             </a-form-item>
+            <a-alert v-if="err == true" class="mb-3" message="Invalid Username or Password" type="error" />
             <a-form-item>
               <a-button
                 block
@@ -127,12 +130,10 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
 import { UserOutlined, LockOutlined, AimOutlined, MailOutlined } from "@ant-design/icons-vue";
 
 export default {
-  name: "LoginPage",
+  name: "LandingPage",
   components: {
     LockOutlined,
     UserOutlined,
@@ -142,26 +143,32 @@ export default {
   data() {
     return {
       dialog: false,
+      username: '',
+      password: '',
+      err: null,
     };
   },
-  setup() {
-    const username = ref("");
-    const password = ref("");
-    const router = useRouter();
-
-    const handleSubmit = () => {
-      console.log("Username:", username.value);
-      console.log("Password:", password.value);
-      // Handle form submission logic
-      router.push("/dashboard");
-    };
-
-    return {
-      username,
-      password,
-      handleSubmit,
-    };
-  },
+  methods: {
+    handleSubmit() {
+      if (this.username === 'Admin' && this.password === 'Password') {
+        this.loggedIn = true
+        this.user =  {username: this.username};
+        // eslint-disable-next-line no-undef
+        this.$router.push({name: 'DashboardView'})
+      } else if (this.username === 'Tenant' && this.password === 'Password'){
+        
+        this.user = {username: this.username};
+        this.$router.push({name: 'tenant_dashboard'})
+      } else if (this.username === 'App_user' && this.password === 'password') {
+        //this.$router.push({name: 'tenant'})
+        console.log("Tenant Login Successful");
+      } else {
+        this.err = true
+        console.log("Error!!!")
+      }
+    }
+  }
+  
 };
 </script>
 

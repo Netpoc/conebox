@@ -3,6 +3,7 @@ import LandingPage from '../views/LandingPage.vue'
 import UserManager from '../views/UserManager.vue'
 import Reports from '../views/Reports.vue'
 import Settings from '../views/Settings.vue'
+import Tenant_Dashboard from '../views/tenant/Tenant_Dash.vue'
 
 const routes = [
   {
@@ -32,7 +33,13 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/DashboardView.vue')
-  }
+  },
+  //Tenant Routes
+  {
+    path: '/tenant_dashboard',
+    name: 'tenant_dashboard',
+    component: Tenant_Dashboard
+  },
 ]
 
 const router = createRouter({
