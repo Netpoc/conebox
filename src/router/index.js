@@ -4,6 +4,7 @@ import UserManager from '../views/UserManager.vue'
 import Reports from '../views/Reports.vue'
 import Settings from '../views/Settings.vue'
 import Tenant_Dashboard from '../views/tenant/Tenant_Dash.vue'
+import Subsidiary_Page from '../views/tenant/SubsidiariesPage.vue'
 
 const routes = [
   {
@@ -39,6 +40,11 @@ const routes = [
     path: '/tenant_dashboard',
     name: 'tenant_dashboard',
     component: Tenant_Dashboard
+  },
+  {
+    path: '/subsidiary_page',
+    name: 'subsidiary_page',
+    component: Subsidiary_Page
   },
 ]
 
