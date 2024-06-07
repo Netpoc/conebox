@@ -37,15 +37,16 @@
         md="6"
         style="min-width: 100px; max-width: 100%"
       >
-        <v-sheet>
+        <v-sheet class="ma-3 rounded-xl">
           <v-data-table
             :headers="headers"
             :items="desserts"
             :sort-by="[{ key: 'calories', order: 'asc' }]"
-            :items-per-page="3"
+            :items-per-page="5"
           >
             <template v-slot:item.actions="{ item }">
-              <v-btn color="#FFC107" size="small">Generate Invoice</v-btn>
+              <v-btn icon variant="text"><v-icon>mdi-account-tie-hat</v-icon></v-btn>
+              <v-btn icon variant="text" class="ma-2"><v-icon>mdi-account-cog</v-icon></v-btn>
             </template>
             <template v-slot:no-data>
               <v-btn color="primary" @click="initialize"> Reset </v-btn>
@@ -60,6 +61,9 @@
             </template>
           </v-data-table>
         </v-sheet>
+      </v-col>
+      <v-col class="flex-grow-0 flex-shrink-1" md="3" style="min-width: 100px">
+
       </v-col>
     </v-row>
   </v-main>
@@ -106,25 +110,43 @@ export default {
       ],
     };
   },
+  computed: {
+      formTitle () {
+        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+      },
+    },
+
+    watch: {
+      dialog (val) {
+        val || this.close()
+      },
+      dialogDelete (val) {
+        val || this.closeDelete()
+      },
+    },
+
+    created () {
+      this.initialize()
+    },
   methods: {
       initialize () {
         this.desserts = [
           {
-            name: 'Tenant 1',
+            name: 'App User 1',
             calories: 159,
             fat: 6.0,
             carbs: 24,
             protein: 4.0,
           },
           {
-            name: 'Tenant 2',
+            name: 'App User 2',
             calories: 237,
             fat: 9.0,
             carbs: 37,
             protein: 4.3,
           },
           {
-            name: 'Tenant 3',
+            name: 'App User 3',
             calories: 262,
             fat: 16.0,
             carbs: 23,
