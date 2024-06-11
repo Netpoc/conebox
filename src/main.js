@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import '@mdi/font/css/materialdesignicons.css'
+import VueApexCharts from "vue3-apexcharts";
 import '../styles.css'
+import router from './router';
 
 //Ant Deesign
 import Antd from 'ant-design-vue';
@@ -12,13 +14,11 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
-import App from './App.vue'
-
 const vuetify = createVuetify({
     components,
     directives,
   })
 
-import router from './router'
+import App from './App.vue'
 
-createApp(App).use(router).use(Antd).use(vuetify).mount('#app')
+createApp(App).use(router).use(Antd).use(vuetify).use(VueApexCharts).mount('#app')

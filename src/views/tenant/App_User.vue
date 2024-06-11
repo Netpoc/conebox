@@ -104,9 +104,9 @@ export default {
           sortable: false,
           key: "name",
         },
+        {title: "Company"},
         { title: "Due Date", key: "calories" },
-
-        { title: "Actions", key: "actions", sortable: false },
+        { title: "Roles", key: "actions", sortable: false },
       ],
     };
   },

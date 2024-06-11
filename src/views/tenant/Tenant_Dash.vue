@@ -16,7 +16,7 @@
       >
         <v-sheet class="ma-2 bg-grey-lighten-4 d-flex rounded-lg justify-space-around">
           <v-sheet            
-            class="rounded-xl pa-3 ma-3 d-flex align-center"
+            class="rounded-xl ma-3 d-flex align-center"
           >
             <v-sheet
               class="ma-3 rounded-lg d-flex justify-center align-center"
@@ -68,7 +68,9 @@
           </v-sheet>
         </v-sheet>
 
-        <v-sheet height="240" class="ma-2"> </v-sheet>
+        <v-sheet height="240" class="ma-5 rounded-xl"> 
+          <Bar :style="myStyles"/>
+        </v-sheet>
         <v-sheet height="180" class="ma-2">
           <v-tabs
             v-model="tab"
@@ -133,16 +135,34 @@
   </v-main>
 </template>
 <script>
+import { Bar } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 import Nav from "../../components/NavBar";
 import NavList from "../../components/TenantDrawer"
+
+
 export default {
   components: {
     Nav,
     NavList,
+    Bar
+    
   },
   data() {
-    return {};
+    return {
+        
+    };
   },
+  computed: {
+    myStyles () {
+      return {
+        height: 200,
+        position: 'relative'
+      }
+    }
+  }
 };
 </script>
 <style scoped>

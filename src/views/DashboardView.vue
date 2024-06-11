@@ -86,7 +86,11 @@
           </v-sheet>
         </v-sheet>
 
-        <v-sheet height="240" class="ma-2"> </v-sheet>
+        <v-card class="pa-5 ma-5">
+          <apexchart type="line" :options="options" :series="series">
+
+          </apexchart>
+        </v-card>
         <v-sheet height="180" class="ma-2">
           <v-tabs
             v-model="tab"
@@ -184,6 +188,31 @@ export default {
   },
   data() {
     return {
+      options: {
+        chart: {
+          id: 'vuechart-example'
+        },
+        xaxis: {
+        categories: [
+         "Jan",
+         "Feb",
+         "Mar",
+         "Apr",
+         "May",
+         "Jun",
+         "Jul",
+         "Aug",
+         "Sep",
+         "Oct",
+         "Nov",
+         "Dec"
+        ]
+      }
+      },
+      series: [{
+        name: 'series-1',
+        data: [55, 62, 89, 66, 98, 72, 101, 75, 94, 120, 117, 139]
+      }],
       page: 1,
       dialog: false,
       dialogDelete: false,
