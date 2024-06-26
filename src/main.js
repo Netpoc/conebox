@@ -4,7 +4,7 @@ import VueApexCharts from "vue3-apexcharts";
 import '../styles.css'
 import router from './router';
 
-//Ant Deesign
+//Ant Design
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/reset.css';
 

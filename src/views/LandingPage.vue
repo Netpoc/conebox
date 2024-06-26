@@ -15,23 +15,31 @@
           <v-dialog v-model="dialog" width="auto">
             <v-card min-width="400" class="ma-3 pa-3 rounded-lg">
               <h3>Add Tenant</h3>
-              Enter Name              
-                <a-input class="mb-3" v-model:value="tenant" placeholder="Enter Name">
-                  <template #prefix>
-                    <UserOutlined />
-                  </template>
-                </a-input>
-              
-              Address              
-                <a-input class="mb-3" v-model:value="address" placeholder="Enter Address">
-                  <template #prefix>
-                    <AimOutlined />
-                  </template>
-                </a-input>
-              
+              Enter Name
+              <a-input
+                class="mb-3"
+                v-model:value="tenant"
+                placeholder="Enter Name"
+              >
+                <template #prefix>
+                  <UserOutlined />
+                </template>
+              </a-input>
+
+              Address
+              <a-input
+                class="mb-3"
+                v-model:value="address"
+                placeholder="Enter Address"
+              >
+                <template #prefix>
+                  <AimOutlined />
+                </template>
+              </a-input>
+
               Select a company:
               <a-select
-              class="mb-3"
+                class="mb-3"
                 v-model:value="value"
                 show-search
                 placeholder="Select a company"
@@ -43,27 +51,50 @@
                 @change="handleChange"
               ></a-select>
               Enter Email:
-              
-                <a-input class="mb-3" v-model:value="email" placeholder="Enter email">
-                  <template #prefix>
-                    <MailOutlined />
-                  </template>
-                </a-input>
-                <a-form-item class="ma-1">
-                  <a-checkbox v-model:checked="checked">Group option</a-checkbox>
-                </a-form-item>         
+
+              <a-input
+                class="mb-3"
+                v-model:value="email"
+                placeholder="Enter email"
+              >
+                <template #prefix>
+                  <MailOutlined />
+                </template>
+              </a-input>
+              <a-form-item class="ma-1">
+                <a-checkbox v-model:checked="checked">Group option</a-checkbox>
+              </a-form-item>
               <a-form-item>
                 <a-button
-                  block
-                  html-type="submit"
+                  block                  
                   type="primary"
-                  class="login-button"
+                  class="login-button"                  
+                  @click="confirm = true"                  
                 >
                   Continue
                 </a-button>
               </a-form-item>
             </v-card>
           </v-dialog>
+
+          <!--Email Sent Confirmation-->
+          <v-dialog>
+            <v-card
+              max-width="400"
+              prepend-icon="mdi-update"
+              text="Your application will relaunch automatically after the update is complete."
+              title="Update in progress"
+            >
+              <template v-slot:actions>
+                <v-btn
+                  class="ms-auto"
+                  text="Ok"
+                  @click="confirm = false"
+                ></v-btn>
+              </template>
+            </v-card>
+          </v-dialog>
+          <!--Email Send End-->
         </v-card>
       </v-col>
       <v-col md="3">
@@ -101,7 +132,12 @@
                 </template>
               </a-input-password>
             </a-form-item>
-            <a-alert v-if="err == true" class="mb-3" message="Invalid Username or Password" type="error" />
+            <a-alert
+              v-if="err == true"
+              class="mb-3"
+              message="Invalid Username or Password"
+              type="error"
+            />
             <a-form-item>
               <a-button
                 block
@@ -130,7 +166,12 @@
 </template>
 
 <script>
-import { UserOutlined, LockOutlined, AimOutlined, MailOutlined } from "@ant-design/icons-vue";
+import {
+  UserOutlined,
+  LockOutlined,
+  AimOutlined,
+  MailOutlined,
+} from "@ant-design/icons-vue";
 
 export default {
   name: "LandingPage",
@@ -143,32 +184,32 @@ export default {
   data() {
     return {
       dialog: false,
-      username: '',
-      password: '',
+      username: "",
+      password: "",
       err: null,
+      email: "",
+      confirm: "",
     };
   },
   methods: {
     handleSubmit() {
-      if (this.username === 'Admin' && this.password === 'Password') {
-        this.loggedIn = true
-        this.user =  {username: this.username};
+      if (this.username === "Admin" && this.password === "Password") {
+        this.loggedIn = true;
+        this.user = { username: this.username };
         // eslint-disable-next-line no-undef
-        this.$router.push({name: 'DashboardView'})
-      } else if (this.username === 'Tenant' && this.password === 'Password'){
-        
-        this.user = {username: this.username};
-        this.$router.push({name: 'tenant_dashboard'})
-      } else if (this.username === 'App_user' && this.password === 'password') {
-        //this.$router.push({name: 'tenant'})
+        this.$router.push({ name: "DashboardView" });
+      } else if (this.username === "Tenant" && this.password === "Password") {
+        this.user = { username: this.username };
+        this.$router.push({ name: "tenant_dashboard" });
+      } else if (this.username === "App_user" && this.password === "Password") {
+        this.$router.push({name: 'appUserDashboard'})
         console.log("Tenant Login Successful");
       } else {
-        this.err = true
-        console.log("Error!!!")
+        this.err = true;
+        console.log("Error!!!");
       }
-    }
-  }
-  
+    },
+  },
 };
 </script>
 
@@ -179,7 +220,7 @@ html,
   height: 100%;
   margin: 0;
 }
-.button {  
+.button {
   background-color: #ffc107; /* Custom button color */
 }
 .login-button {

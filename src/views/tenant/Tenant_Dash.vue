@@ -68,8 +68,8 @@
           </v-sheet>
         </v-sheet>
 
-        <v-sheet height="240" class="ma-5 rounded-xl"> 
-          <Bar :style="myStyles"/>
+        <v-sheet height="300" class="pa-5 ma-5 align-content-center rounded-xl"> 
+          <Chart/>
         </v-sheet>
         <v-sheet height="180" class="ma-2">
           <v-tabs
@@ -135,19 +135,17 @@
   </v-main>
 </template>
 <script>
-import { Bar } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 import Nav from "../../components/NavBar";
 import NavList from "../../components/TenantDrawer"
+import Chart from "../../components/Tenant_Chart"
 
 
 export default {
   components: {
     Nav,
     NavList,
-    Bar
+    Chart,
     
   },
   data() {

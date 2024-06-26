@@ -42,7 +42,7 @@
             :headers="headers"
             :items="desserts"
             :sort-by="[{ key: 'calories', order: 'asc' }]"
-            :items-per-page="5"
+            :items-per-page="10"
           >
             <template v-slot:item.actions="{ item }">
               <v-btn icon variant="text"><v-icon>mdi-account-tie-hat</v-icon></v-btn>
@@ -82,6 +82,7 @@ export default {
     return {
       dialog: false,
       desserts: [],
+      item: '',
       editedIndex: -1,
       editedItem: {
         name: '',
@@ -104,7 +105,7 @@ export default {
           sortable: false,
           key: "name",
         },
-        {title: "Company"},
+        {title: "Company", key: "firm"},
         { title: "Due Date", key: "calories" },
         { title: "Roles", key: "actions", sortable: false },
       ],
@@ -132,29 +133,33 @@ export default {
       initialize () {
         this.desserts = [
           {
-            name: 'App User 1',
+            name: 'Bright Coleson',
+            firm: 'NBC',
             calories: 159,
             fat: 6.0,
             carbs: 24,
             protein: 4.0,
           },
           {
-            name: 'App User 2',
+            name: 'Stephen Gboyega',
+            firm: 'NatWest',
             calories: 237,
             fat: 9.0,
             carbs: 37,
             protein: 4.3,
           },
           {
-            name: 'App User 3',
+            name: 'Clinton Okoronkwo',
+            firm: 'PwC',
             calories: 262,
             fat: 16.0,
             carbs: 23,
             protein: 6.0,
           },
           {
-            name: 'Tenant 4',
+            name: 'Babalola Smith',
             calories: 262,
+            firm: 'Spark Inc.',
             fat: 16.0,
             carbs: 23,
             protein: 6.0,
@@ -162,6 +167,7 @@ export default {
           {
             name: 'Tenant 5',
             calories: 262,
+            firm: 'PwC',
             fat: 16.0,
             carbs: 23,
             protein: 6.0,
@@ -169,6 +175,7 @@ export default {
           {
             name: 'Tenant 6',
             calories: 262,
+            firm: 'PwC',
             fat: 16.0,
             carbs: 23,
             protein: 6.0,
