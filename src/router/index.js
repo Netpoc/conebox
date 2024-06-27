@@ -13,6 +13,7 @@ import TrialBalance from '../views/appuser/TrialBalance.vue'
 import ChartOfAccount from '../views/appuser/ChartOfAccount.vue'
 import Journal from '../views/appuser/Journal.vue'
 import AppUserSetting from '../views/appuser/AppUserSettings.vue'
+import Mapping from '../views/appuser/MappingView.vue'
 
 const routes = [
   {
@@ -89,6 +90,11 @@ const routes = [
     path: '/journal',
     name: 'Journal',
     component: Journal
+  },
+  {
+    path: '/mapping',
+    name: 'mapping',
+    component: Mapping
   },
 ]
 
