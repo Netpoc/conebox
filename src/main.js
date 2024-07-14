@@ -4,6 +4,9 @@ import VueApexCharts from "vue3-apexcharts";
 import '../styles.css'
 import router from './router';
 
+import { registerLicense } from '@syncfusion/ej2-base';
+registerLicense("ORg4AjUWIQA/Gnt2U1hhQlJBfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hTX5Ud0FjWn5fdXFVR2Ja");
+
 //Ant Design
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/reset.css';
