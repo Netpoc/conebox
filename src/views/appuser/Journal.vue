@@ -8,7 +8,7 @@
             </v-col>
             <v-col md="6">
                 <v-card class="pa-5 ma-2">
-                    <h3>Upload Trial Balance Sheet</h3>
+                    <h3>UploadJournal</h3>
                     <v-sheet height="250" class="d-flex align-center justify-center">
                         <v-file-input label="File input" show-size></v-file-input>
                         
