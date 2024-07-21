@@ -19,7 +19,8 @@
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vue3-apexcharts": "^1.5.3",
-    "vuetify": "^3.6.8"
+    "vuetify": "^3.6.8",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

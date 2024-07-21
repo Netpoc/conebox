@@ -5,7 +5,7 @@ import '../styles.css'
 import router from './router';
 
 import { registerLicense } from '@syncfusion/ej2-base';
-registerLicense("ORg4AjUWIQA/Gnt2U1hhQlJBfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hTX5Ud0FjWn5fdXFVR2Javue");
+registerLicense("ORg4AjUWIQA/Gnt2U1hhQlJBfVddWnxLflFyVWFTfFt6dVJWESFaRnZdRl1kS39TcEVnW3lZcHJS");
 
 //Ant Design
 import Antd from 'ant-design-vue';
