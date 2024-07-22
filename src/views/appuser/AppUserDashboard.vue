@@ -49,6 +49,40 @@
                 </v-card>
 
             </v-col>
+            <v-col md="4">
+                <v-card class="ma-4 pa-4">
+                    <v-card-title>
+                        Chart of Account
+                    </v-card-title>
+                    <v-card-text>
+                        <v-table height="300px">
+    <thead>
+      <tr>
+        <th class="text-left">
+          FS Line
+        </th>
+        <th class="text-left">
+          Description
+        </th>
+        <th class="text-left">
+          Class
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        v-for="item in charts"
+        :key="item.name"
+      >
+        <td>{{ item.name }}</td>
+        <td>{{ item.description }}</td>
+        <td>{{ item.class }}</td>
+      </tr>
+    </tbody>
+  </v-table>
+                    </v-card-text>
+                </v-card>
+            </v-col>
         </v-row>
     </v-main>
 </template>
@@ -66,7 +100,44 @@ export default {
     },
     data() {
         return {
-
+            charts: [
+          {
+            name: '234000',
+            description: 'Plant & Equipment',
+            class: 'Asset'
+          },
+          {
+            name: '234201',
+            description: 'Professional Service',
+            class: 'Liability'
+          },
+          {
+            name: '230003',
+            description: 'Raw materials',
+            class: 'Assets'
+          },
+          {
+            name: '230023',
+            description: 'Other Expenses',
+            class: 'Liability'
+          },
+          {
+            name: '230089',
+            description: 'Deferred tax Asset',
+            class: 'Asset'
+          },
+          {
+            name: '230007',
+            description: 'Right-of-use Assets',
+            class:'Liability'
+          },
+          {
+            name: '230090',
+            description: 'Loans',
+            class: 'Liability'
+          },
+         
+        ],
         }
     }
 }

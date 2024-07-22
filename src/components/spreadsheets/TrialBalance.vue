@@ -2,7 +2,7 @@
   import { SpreadsheetComponent, SheetsDirective, SheetDirective, RangesDirective, 
       RangeDirective, ColumnsDirective, ColumnDirective } from '@syncfusion/ej2-vue-spreadsheet';
   import { ButtonComponent } from '@syncfusion/ej2-vue-buttons';
-  import datasource from '../../default.json';
+ 
   export default{
     components: {
       'ejs-spreadsheet': SpreadsheetComponent,
@@ -16,7 +16,7 @@
     },
     data(){
       return{
-        data: datasource.defaultData,
+        
         customWidth: 130,
         openUrl: 'https://services.syncfusion.com/vue/production/api/spreadsheet/open', 
         saveUrl: 'https://services.syncfusion.com/vue/production/api/spreadsheet/save'
@@ -29,7 +29,7 @@
       created: function() {
         var spreadsheet = this.$refs.spreadsheet;
         spreadsheet.cellFormat({ fontWeight: 'bold', textAlign: 'center' }, 'A1:F1');
-        fetch('https://cdn.syncfusion.com/scripts/spreadsheet/Sample.xlsx')
+        fetch('https://res.cloudinary.com/netpoc-inc/raw/upload/v1721678813/dqhcumrrubwih17mcbrm.xlsx')
         .then((response)=>{
           response.blob().then((fileBlob) => {
             var file = new File([fileBlob], "Sample.xlsx");
@@ -73,9 +73,7 @@
         </e-sheet> 
       </e-sheets>
     </ejs-spreadsheet>
-    <div>
-        <ejs-button style="margin: 5px;" v-on:click="btnClk">Save</ejs-button>
-    </div>
+    <ejs-button style="margin: 5px;" v-on:click="btnClk">Save</ejs-button>
   </div>
 </template>
 
