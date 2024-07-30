@@ -48,14 +48,44 @@
                                 </tr>
                             </tbody>
                         </v-table>
-                    </div>
-
-                    <div class="justify-content-end">
-                        <v-btn>Next </v-btn>
-                    </div>
+                    </div>                    
                 </v-card>
-
+                <div class="pr-2 d-flex justify-content-end">
+                    <v-spacer></v-spacer>
+                        <v-btn class="mt-3 pl-3">Next <v-icon>mdi-chevron-right</v-icon></v-btn>
+                    </div>
             </v-col>
+            <v-col md="4">
+        <v-card class="ma-4 pa-4">
+          <v-card-title>
+            Chart of Account
+          </v-card-title>
+          <v-card-text>
+            <v-table height="300px">
+              <thead>
+                <tr>
+                  <th class="text-left">
+                    FS Line
+                  </th>
+                  <th class="text-left">
+                    Description
+                  </th>
+                  <th class="text-left">
+                    Class
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in charts" :key="item.name">
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.description }}</td>
+                  <td>{{ item.class }}</td>
+                </tr>
+              </tbody>
+            </v-table>
+          </v-card-text>
+        </v-card>
+      </v-col>
             
         </v-row>
     </v-main>

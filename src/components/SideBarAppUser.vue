@@ -21,9 +21,10 @@ export default {
             items: [
                 { text: "Dashboard", icon: "mdi-view-dashboard", to: "app_user_dashboard" },
                 { text: "Trial Balance", icon: "mdi-file-compare", to: "trial_balance" },
-                { text: "Charts of Account", icon: "mdi-cards-variant", to: "chart_of_account" },
+                
                 { text: "Journal", icon: "mdi-clipboard-text-multiple-outline", to: "journal" },
                 { text: "Mapping", icon: "mdi-map-marker-distance", to: "mapping" },
+                { text: "FS Designer", icon: "mdi-vector-curve", to: ""},
                 { text: "Settings", icon: "mdi-cog", to: "app_user_setting" },
                 { text: "Logout", icon: "mdi-logout", to: "/" },
             ],
