@@ -5,7 +5,6 @@
                 <template v-slot:prepend>
                     <v-icon :icon="item.icon"></v-icon>
                 </template>
-
                 <v-list-item-title v-text="item.text"></v-list-item-title>
             </v-list-item>
         </v-list>
@@ -24,7 +23,7 @@ export default {
                 
                 { text: "Journal", icon: "mdi-clipboard-text-multiple-outline", to: "journal" },
                 { text: "Mapping", icon: "mdi-map-marker-distance", to: "mapping" },
-                { text: "FS Designer", icon: "mdi-vector-curve", to: ""},
+                { text: "FS Designer", icon: "mdi-vector-curve", to: "/fsdesigner"},
                 { text: "Settings", icon: "mdi-cog", to: "app_user_setting" },
                 { text: "Logout", icon: "mdi-logout", to: "/" },
             ],

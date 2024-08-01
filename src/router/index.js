@@ -14,6 +14,7 @@ import ChartOfAccount from '../views/appuser/ChartOfAccount.vue'
 import Journal from '../views/appuser/Journal.vue'
 import AppUserSetting from '../views/appuser/AppUserSettings.vue'
 import Mapping from '../views/appuser/MappingView.vue'
+import FsDesigner from '@/views/appuser/FsDesigner.vue'
 
 const routes = [
   {
@@ -95,6 +96,11 @@ const routes = [
     path: '/mapping',
     name: 'mapping',
     component: Mapping
+  },
+  {
+    path: '/fsdesigner',
+    name: 'FsDesigner',
+    component: FsDesigner
   },
 ]
 
