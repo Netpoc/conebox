@@ -32,9 +32,25 @@
             <v-card to="#" class="pa-2 d-flex justify-center" min-width="150">
               Chart of <br> Account
             </v-card>
-            <v-card to="#" class="pa-2 d-flex justify-center" min-width="150">
-              Journal <br> Work
-            </v-card>
+            <v-dialog>
+              <template v-slot:activator="{ props: activateJournal }">
+                <v-card v-bind="activateJournal" class="pa-2 d-flex justify-center" min-width="150">
+                  Journal <br> Work
+                </v-card>
+              </template>
+
+              <template v-slot:default="{ isActive }">
+                <v-card>
+                  <v-card-title>Journal Works</v-card-title>
+                  <v-card-text>
+                    <JournalSpreadsheet />
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn @click="isActive.value = false">Next </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </template>
+            </v-dialog>
             <v-card to="#" class="pa-2 d-flex justify-center" min-width="150">
               Sheet <br> Mapping
             </v-card>
@@ -82,12 +98,13 @@
 import Nav from "@/components/NavBar.vue"
 import SideBar from "@/components/SideBarAppUser.vue"
 import TrialBalanceSheet from "@/components/spreadsheets/TrialBalance.vue"
-
+import JournalSpreadsheet from "@/components/spreadsheets/JournalSpreadsheet.vue";
 export default {
   components: {
     Nav,
     SideBar,
-    TrialBalanceSheet
+    TrialBalanceSheet,
+    JournalSpreadsheet
   },
   data() {
     return {
