@@ -11,6 +11,7 @@
     "@ant-design/icons": "^5.3.7",
     "@ant-design/icons-vue": "^7.0.1",
     "@syncfusion/ej2-vue-buttons": "^24.2.7",
+    "@syncfusion/ej2-vue-dropdowns": "^26.2.7",
     "@syncfusion/ej2-vue-spreadsheet": "^24.2.8",
     "ant-design-vue": "^4.2.1",
     "apexcharts": "^3.49.1",

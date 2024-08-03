@@ -44,6 +44,7 @@
                   <v-card-title>Journal Works</v-card-title>
                   <v-card-text>
                     <JournalSpreadsheet />
+                    <p class="mt-3">Upload Journal to proceed.</p>
                   </v-card-text>
                   <v-card-actions>
                     <v-btn @click="isActive.value = false">Next </v-btn>
