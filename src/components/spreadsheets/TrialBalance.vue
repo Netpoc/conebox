@@ -53,28 +53,27 @@
         try {
           const spreadsheet = this.$refs.spreadsheet;
           const activesheet = spreadsheet.ej2Instances.activeSheetIndex
-          console.log('ActiveSheet: ', activesheet);
+          
           if (activesheet == 0) {
             const credit = spreadsheet.computeExpression("=SUM(C3:C100)");
             const debit = spreadsheet.computeExpression("=SUM(D3:D100)");
             const balance = credit + debit;
             if(balance === 0) {
-              spreadsheet.getData("TB1!A3:D8").then((data) => console.log("GetData: ",data))
+              spreadsheet.getData("TB1!A3:D8").then((data) => console.log("GetData: ", data))
               spreadsheet.saveAsJson().then((Json) => (this.response = Json));
-              console.log('Successful Zero Sum Check: ', this.response.flat());
-            }else {
-              
+              console.log('Successful Zero Sum Check: ', this.response['jsonObject']['Workbook']['sheets'][0]);
+            }else {              
               this.zeroSumError = 'Failed Zero Sum Check!!!';
               console.log('Failed Zero Sum Check!!!');
             }
           } else if (activesheet == 1) {
             const sumCheck = spreadsheet.computeExpression("=SUM(C3:C100)");
             if(sumCheck === 0) {
-              spreadsheet.getData("TB1!A3:D8").then((data) => console.log("GetData: ",data))
+              spreadsheet.getData("TB2!A3:C9").then((data) => console.log("GetData: ", data))
               spreadsheet.saveAsJson().then((Json) => (this.response = Json));
-              console.log('Successful Zero Sum Check: ', this.response['jsonObject']['Workbook']['sheets'][1]);
+              //console.log('Successful Zero Sum Check: ', this.response['jsonObject']['Workbook']['sheets'][1]);
               this.zeroSumError = false;
-              console.log('Successful Zero Sum Check');
+              
             }else {
               this.zeroSumError = 'Failed Zero Sum Check!!!'
               console.log('Failed Zero Sum Check!!!')
