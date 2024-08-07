@@ -1,9 +1,9 @@
 <template>
-  <div class="control-section">
+  <v-card class="control-section">
     <div id="spreadsheet-default-section">
-      <ejs-spreadsheet ref="spreadsheet" :openUrl="openUrl" :saveUrl="saveUrl" :created="created">
+      <ejs-spreadsheet ref="spreadsheet" :openUrl="openUrl" :saveUrl="saveUrl" :created="created" :selectionSettings="selectionSettings">
         <e-sheets>
-          <e-sheet name="Car Sales Report">
+          <e-sheet name="Journal Template">
             <e-ranges>
               <e-range :dataSource="dataSource"></e-range>
             </e-ranges>
@@ -15,19 +15,26 @@
               <e-column :width="100"></e-column>
               <e-column :width="120"></e-column>
               <e-column :width="120"></e-column>
-              
             </e-columns>
-          </e-sheet>
+            <e-ranges>
+            <e-range></e-range>
+          </e-ranges>          
+          </e-sheet>          
         </e-sheets>
       </ejs-spreadsheet>
     </div>
-
-  </div>
+    <v-card-actions>     
+      <v-spacer></v-spacer>
+      <v-btn class="ma-2" @click="loadData">Load <v-icon>mdi-chevron-right</v-icon></v-btn>
+      <v-btn class="ma-2" @click="saveData">Save <v-icon>mdi-chevron-right</v-icon></v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script>
-import { SpreadsheetComponent, SheetDirective, RowsDirective, RowDirective, SheetsDirective, ColumnsDirective, ColumnDirective, RangesDirective, RangeDirective, getRangeAddress} from '@syncfusion/ej2-vue-spreadsheet';
+import { SpreadsheetComponent, SheetDirective, RowsDirective, RowDirective, SheetsDirective, ColumnsDirective, ColumnDirective, RangesDirective, RangeDirective, getRangeAddress, SpreadsheetPlugin} from '@syncfusion/ej2-vue-spreadsheet';
 import dataSource from "@/default.json";
+import { DataManager } from '@syncfusion/ej2-data';
 
 export default {
     components: {
@@ -39,15 +46,25 @@ export default {
     'e-column': ColumnDirective,
     'e-columns': ColumnsDirective,
     'e-range': RangeDirective,
-    'e-ranges': RangesDirective
+    'e-ranges': RangesDirective,
+    ejsSpreadsheet: SpreadsheetPlugin
    },  
    data: () => {
     return {
-      dataSource: dataSource.defaultData,
+      response: "",
+      selectionSettings: {mode: 'Multiple'},
+      dataSource: new DataManager(dataSource.defaultData),
       rowIndex: 30,
       colIndex: 4,      
       openUrl: 'https://services.syncfusion.com/vue/production/api/spreadsheet/open',
       saveUrl: 'https://services.syncfusion.com/vue/production/api/spreadsheet/save'
+    }
+  },
+  mounted() {
+    // Load data from local storage if exists
+    const savedData = localStorage.getItem('spreadsheetData');
+    if (savedData) {
+      this.$refs.spreadsheet.open({ file: savedData });
     }
   },
   methods: {
@@ -57,6 +74,15 @@ export default {
       let rowCount = spreadsheet.ej2Instances.getActiveSheet().rowCount;
       const cool = spreadsheet.selectRange(getRangeAddress([1, 2, rowCount, 3]));
       console.log(cool);
+    },
+    saveData() {
+      // Save data to local storage
+      const spreadsheet = this.$refs.spreadsheet;
+      spreadsheet.saveAsJson().then((json) => (this.response = json));
+    },
+    loadData () {
+      this.$refs.spreadsheet.openFromJson({file: this.response.jsonObject});
+      console.log(this.response.jsonObject)
     }
   }
   

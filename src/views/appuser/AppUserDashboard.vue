@@ -20,8 +20,8 @@
               <template v-slot:default="{ isActive }">
                 <v-card>
                   <v-card-title class="pa-2 d-flex justify-space-between align-center">
-                    Work on Trial Balance
-                    <v-btn variant="text" @click="isActive.value = false" icon><v-icon>mdi-close</v-icon></v-btn>
+                    <p class="ma-5">Work on Trial Balance</p>
+                    <v-btn class="ma-3" variant="text" @click="isActive.value = false" icon><v-icon>mdi-close</v-icon></v-btn>
                   </v-card-title>
                   <v-card-text>
                     <TrialBalanceSheet />
@@ -29,9 +29,12 @@
                 </v-card>
               </template>
             </v-dialog>
+            <!-- Trial Balance Dialog Ends Here-->
             <v-card to="#" class="pa-2 d-flex justify-center" min-width="150">
               Chart of <br> Account
             </v-card>
+
+            <!-- Journal Dialog Starts Here-->
             <v-dialog>
               <template v-slot:activator="{ props: activateJournal }">
                 <v-card v-bind="activateJournal" class="pa-2 d-flex justify-center" min-width="150">
@@ -43,15 +46,12 @@
                 <v-card>
                   <v-card-title>Journal Works</v-card-title>
                   <v-card-text>
-                    <JournalSpreadsheet />
-                    <p class="mt-3">Upload Journal to proceed.</p>
-                  </v-card-text>
-                  <v-card-actions>
-                    <v-btn @click="isActive.value = false">Next </v-btn>
-                  </v-card-actions>
+                    <JournalSpreadsheet />                    
+                  </v-card-text>                  
                 </v-card>
               </template>
             </v-dialog>
+            <!-- Journal Dialog Ends Here-->
             <v-card to="#" class="pa-2 d-flex justify-center" min-width="150">
               Sheet <br> Mapping
             </v-card>

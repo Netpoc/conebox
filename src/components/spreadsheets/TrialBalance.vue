@@ -2,7 +2,6 @@
   import { SpreadsheetComponent, SheetsDirective, SheetDirective, RangesDirective, 
       RangeDirective, ColumnsDirective, ColumnDirective } from '@syncfusion/ej2-vue-spreadsheet';
   
-  import axios from 'axios';
  
   export default{
     components: {
@@ -18,7 +17,7 @@
       return{
         popupLoader: false,
         zeroSumError: '',
-        response: '',
+        response: [],
         sumTotal: null,
         customWidth: 130,
         openUrl: 'https://services.syncfusion.com/vue/production/api/spreadsheet/open', 
@@ -53,17 +52,34 @@
       async calcSum() {
         try {
           const spreadsheet = this.$refs.spreadsheet;
-          const usedRange = spreadsheet.ej2Instances.getActiveSheet().Column;
-          console.log(usedRange);
-          this.sumTotal = spreadsheet.computeExpression("=SUM(C2:C100)")
-          if(this.sumTotal !== 0) {
-            this.zeroSumError = "Zero sum check failed!!!"         
-          } else {            
-            //this.$refs.spreadsheet.saveAsJson().then((Json)=> (this.response = Json))
-            this.popupLoader=true;
-            setTimeout(()=> (this.$router.push('/trial_balance')), 4000)
-            console.log(this.response)
-          }          
+          const activesheet = spreadsheet.ej2Instances.activeSheetIndex
+          console.log('ActiveSheet: ', activesheet);
+          if (activesheet == 0) {
+            const credit = spreadsheet.computeExpression("=SUM(C3:C100)");
+            const debit = spreadsheet.computeExpression("=SUM(D3:D100)");
+            const balance = credit + debit;
+            if(balance === 0) {
+              spreadsheet.getData("TB1!A3:D8").then((data) => console.log("GetData: ",data))
+              spreadsheet.saveAsJson().then((Json) => (this.response = Json));
+              console.log('Successful Zero Sum Check: ', this.response.flat());
+            }else {
+              
+              this.zeroSumError = 'Failed Zero Sum Check!!!';
+              console.log('Failed Zero Sum Check!!!');
+            }
+          } else if (activesheet == 1) {
+            const sumCheck = spreadsheet.computeExpression("=SUM(C3:C100)");
+            if(sumCheck === 0) {
+              spreadsheet.getData("TB1!A3:D8").then((data) => console.log("GetData: ",data))
+              spreadsheet.saveAsJson().then((Json) => (this.response = Json));
+              console.log('Successful Zero Sum Check: ', this.response['jsonObject']['Workbook']['sheets'][1]);
+              this.zeroSumError = false;
+              console.log('Successful Zero Sum Check');
+            }else {
+              this.zeroSumError = 'Failed Zero Sum Check!!!'
+              console.log('Failed Zero Sum Check!!!')
+            }
+          }        
         } catch (error) {
           console.log('Failed Calculation', error);
         }
@@ -164,8 +180,7 @@
         </e-sheet> 
       </e-sheets>
     </ejs-spreadsheet>
-    <v-card-actions>
-     
+    <v-card-actions>     
       <v-spacer></v-spacer>
       <v-btn class="ma-2" @click="calcSum">Save <v-icon>mdi-chevron-right</v-icon></v-btn>
     </v-card-actions>
