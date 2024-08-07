@@ -30,7 +30,6 @@
     watch: {
       popupLoader (val) {
         if (!val) return
-
         setTimeout(() => (this.popupLoader = false), 8000)
       },
     },
@@ -62,7 +61,7 @@
               spreadsheet.getData("TB1!A3:D8").then((data) => console.log("GetData: ", data))
               spreadsheet.saveAsJson().then((Json) => (this.response = Json));
               console.log('Successful Zero Sum Check: ', this.response['jsonObject']['Workbook']['sheets'][0]);
-            }else {              
+            } else {              
               this.zeroSumError = 'Failed Zero Sum Check!!!';
               console.log('Failed Zero Sum Check!!!');
             }
@@ -74,7 +73,7 @@
               //console.log('Successful Zero Sum Check: ', this.response['jsonObject']['Workbook']['sheets'][1]);
               this.zeroSumError = false;
               
-            }else {
+            } else {
               this.zeroSumError = 'Failed Zero Sum Check!!!'
               console.log('Failed Zero Sum Check!!!')
             }
@@ -108,25 +107,8 @@
       }
       return 1; // Default to Format 1 if unable to determine
     },
-    validateZeroSum(debitSum, creditSum) {
-      return debitSum === creditSum;
-    },
-    async saveSpreadsheet() {
-      const { debitSum, creditSum, rows } = await this.getSpreadsheetData();
-
-      if (this.validateZeroSum(debitSum, creditSum)) {
-        const data = { debitSum, creditSum, rows };
-        try {
-          await axios.post('/api/save-spreadsheet', data);
-          alert('Spreadsheet saved successfully!');
-        } catch (error) {
-          console.error('Error saving spreadsheet:', error);
-          alert('Failed to save spreadsheet. Please try again.');
-        }
-      } else {
-        alert('The Trial Balance is not zero-sum. Please check your entries.');
-      }
-    },
+    
+    
       btnClk(){
         this.$refs.spreadsheet.save({
           url: 'https://services.syncfusion.com/vue/production/api/spreadsheet/save',

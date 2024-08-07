@@ -1,36 +1,58 @@
 <template>
-    <div class="control-section">
-        <ejs-spreadsheet ref="spreadsheet" :openUrl="openUrl" :saveUrl="saveUrl">
-            <e-sheets>
-                <e-sheet name="Journal Template">
-                    <e-ranges>
-                        <e-range :dataSource="dataSource"></e-range>
-                    </e-ranges>
-                    <e-rows>
-                        <e-row :index="rowIndex" :cells="cells"></e-row>
-                    </e-rows>
-                    <e-columns>
-                        <e-column :width="150"></e-column>
-                        <e-column :width="100"></e-column>
-                        <e-column :width="120"></e-column>
-                        <e-column :width="120"></e-column>
-                    </e-columns>
-                    <e-ranges>
-                        <e-range></e-range>
-                    </e-ranges>
-                </e-sheet>
-            </e-sheets>
-        </ejs-spreadsheet>
-        <button @click="Save">Save JSON</button>
-        <button @click="Open">Load JSON</button>
-    </div>
+    <Nav />
+    <v-main>
+        <h1 class="ma-5">Journal</h1>
+        <v-row>
+            <v-col md="2">
+                <SideBar />
+            </v-col>
+            <v-col md="6">
+                <v-card class="pa-5 ma-2">
+                    <ejs-spreadsheet ref="spreadsheet" :openUrl="openUrl" :saveUrl="saveUrl">
+                        <e-sheets>
+                            <e-sheet name="Journal Template">
+                                <e-ranges>
+                                    <e-range :dataSource="dataSource"></e-range>
+                                </e-ranges>
+                                <e-rows>
+                                    <e-row :index="rowIndex" :cells="cells"></e-row>
+                                </e-rows>
+                                <e-columns>
+                                    <e-column :width="150"></e-column>
+                                    <e-column :width="100"></e-column>
+                                    <e-column :width="120"></e-column>
+                                    <e-column :width="120"></e-column>
+                                </e-columns>
+                                <e-ranges>
+                                    <e-range></e-range>
+                                </e-ranges>
+                            </e-sheet>
+                        </e-sheets>
+                    </ejs-spreadsheet>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="Save">Save JSON</v-btn>
+                    <v-btn @click="Open">Load JSON</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+            <v-col md="4">
+                 
+            </v-col>
+        </v-row>
+
+    </v-main>
 </template>
 
 <script>
 import { SpreadsheetComponent, SheetDirective, RowsDirective, RowDirective, SheetsDirective, ColumnsDirective, ColumnDirective, RangesDirective, RangeDirective, getRangeAddress, SpreadsheetPlugin } from '@syncfusion/ej2-vue-spreadsheet';
-
+import Nav from '@/components/NavBar.vue';
+import SideBar from '@/components/SideBarAppUser.vue';
 export default {
     components: {
+        Nav,
+        SideBar,
         'ejs-spreadsheet': SpreadsheetComponent,
         'e-sheet': SheetDirective,
         'e-sheets': SheetsDirective,
@@ -55,7 +77,7 @@ export default {
         Save: function () {
             // Save the spreadsheet data as JSON.
             this.$refs.spreadsheet.saveAsJson().then((Json) => (this.response = Json));
-            
+
             console.log(this.response)
         },
         Open: function () {
