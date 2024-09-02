@@ -51,7 +51,7 @@ export default {
    },  
    data: () => {
     return {
-      response: "",
+      response: [],
       selectionSettings: {mode: 'Multiple'},
       dataSource: new DataManager(dataSource.defaultData),
       rowIndex: 30,
@@ -78,11 +78,15 @@ export default {
     saveData() {
       // Save data to local storage
       const spreadsheet = this.$refs.spreadsheet;
-      spreadsheet.saveAsJson().then((json) => (this.response = json));
+      spreadsheet.saveAsJson().then((json) => this.response=json); 
+      localStorage.setItem('workbooks', JSON.stringify(this.response));   
+      console.log(this.response)
     },
-    loadData () {
+    loadData () {      
+      this.response = JSON.parse(localStorage.getItem('workbooks'))
+      console.log('Response:', this.response);
       this.$refs.spreadsheet.openFromJson({file: this.response.jsonObject});
-      console.log(this.response.jsonObject)
+           
     }
   }
   

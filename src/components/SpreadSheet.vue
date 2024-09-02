@@ -61,11 +61,7 @@
           <e-columns>
             <e-column :width="customWidth"></e-column>
             <e-column :width="customWidth"></e-column>
-            <e-column :width="customWidth"></e-column>
-            <e-column :width="customWidth"></e-column>
-            <e-column :width="customWidth"></e-column>
-            <e-column :width="customWidth"></e-column>
-            <e-column :width="customWidth"></e-column>
+            
           </e-columns>
           <e-ranges>
             <e-range></e-range>
