@@ -1,140 +1,3 @@
-<script>
-import { mapActions } from 'vuex';
-import {
-    SpreadsheetComponent, SheetsDirective, SheetDirective, RangesDirective,
-    RangeDirective, ColumnsDirective, ColumnDirective
-} from '@syncfusion/ej2-vue-spreadsheet';
-
-export default {
-    components: {
-        'ejs-spreadsheet': SpreadsheetComponent,
-        'e-sheets': SheetsDirective,
-        'e-sheet': SheetDirective,
-        'e-ranges': RangesDirective,
-        'e-range': RangeDirective,
-        'e-columns': ColumnsDirective,
-        'e-column': ColumnDirective,
-    },
-    data() {
-        return {
-            spreadsheetData: new Map(),
-            documentName: '',
-            popupLoader: false,
-            zeroSumError: '',
-            response: [],
-            sumTotal: null,
-            customWidth: 130,
-            openUrl: 'https://services.syncfusion.com/vue/production/api/spreadsheet/open',
-            saveUrl: 'https://services.syncfusion.com/vue/production/api/spreadsheet/save'
-            //Download and run server project - link provided in the readme file
-            // openUrl: 'https://localhost:44354/api/spreadsheet/open', 
-            // saveUrl: 'https://localhost:44354/api/spreadsheet/save'
-        }
-    },
-    mounted() {
-
-    },
-    watch: {
-        popupLoader(val) {
-            if (!val) return
-            setTimeout(() => (this.popupLoader = false), 8000)
-        },
-    },
-    methods: {
-        ...mapActions(['addWorkbook']),
-        created: function () {
-            var spreadsheet = this.$refs.spreadsheet;
-            spreadsheet.cellFormat({ fontWeight: 'bold', textAlign: 'center' }, 'A1:F1');
-            fetch('https://res.cloudinary.com/netpoc-inc/raw/upload/v1725262075/COMPANY-FY_v0g6c2.xlsx')
-                .then((response) => {
-                    response.blob().then((fileBlob) => {
-                        var file = new File([fileBlob], "Sample.xlsx");
-                        spreadsheet.open({ file: file });
-                    })
-                })
-        },
-
-        onSave(args) {
-            args.customParams = { customParams: 'format:Csv' }
-        },
-        async calcSum() {
-            try {
-                const spreadsheet = this.$refs.spreadsheet;
-                const activesheet = spreadsheet.ej2Instances.activeSheetIndex
-
-                if (activesheet == 0) {
-                    const credit = spreadsheet.computeExpression("=SUM(C3:C100)");
-                    const debit = spreadsheet.computeExpression("=SUM(D3:D100)");
-                    const balance = credit + debit;
-                    if (balance === 0) {
-                        spreadsheet.getData("TB1!A3:D8").then((data) => console.log("GetData: ", data))
-                        spreadsheet.saveAsJson().then((Json) => (this.response = Json));
-                        this.addWorkbook(this.response);
-                        console.log('Successful Zero Sum Check: ', this.response);
-                    } else {
-                        this.zeroSumError = 'Failed Zero Sum Check!!!';
-                        console.log('Failed Zero Sum Check!!!');
-                    }
-                } else if (activesheet == 1) {
-                    const sumCheck = spreadsheet.computeExpression("=SUM(C3:C100)");
-                    if (sumCheck === 0) {
-                        spreadsheet.getData("TB2!A3:C9").then((data) => (this.spreadsheetData = data))
-                        spreadsheet.saveAsJson().then((Json) => (this.response = Json));
-                        this.addWorkbook(this.response)
-                        console.log('Save Payload: ', this.response)
-                        //const storeSheet = await JSON.stringify(Array.from(this.spreadsheetData.entries()));
-                        //localStorage.setItem(this.documentName, storeSheet)
-
-
-                        this.zeroSumError = false;
-
-                    } else {
-                        this.zeroSumError = 'Failed Zero Sum Check!!!'
-                        console.log('Failed Zero Sum Check!!!')
-                    }
-                }
-            } catch (error) {
-                console.log('Failed Calculation', error);
-            }
-        },
-        determineFormat(rows) {
-            // Check the first few rows to determine the format
-            for (let i = 2; i < rows.length; i++) {
-                if (rows[i] && rows[i].cells) {
-                    const cellC = rows[i].cells[2];
-                    const cellD = rows[i].cells[3];
-
-                    if (cellC && cellD) {
-                        const valueC = parseFloat(cellC.value || 0);
-                        const valueD = parseFloat(cellD.value || 0);
-
-                        if (valueC !== 0 || valueD !== 0) {
-                            return 1; // Format 1 detected
-                        }
-                    } else if (cellC) {
-                        const valueC = parseFloat(cellC.value || 0);
-
-                        if (valueC !== 0) {
-                            return 2; // Format 2 detected
-                        }
-                    }
-                }
-            }
-            return 1; // Default to Format 1 if unable to determine
-        },
-
-
-        btnClk() {
-            this.$refs.spreadsheet.save({
-                url: 'https://services.syncfusion.com/vue/production/api/spreadsheet/save',
-                fileName: 'SpreadsheetData',
-                saveType: 'Pdf'
-            })
-        }
-    }
-}
-</script>
-
 <template>
     <v-card>
         <v-banner color="error" icon="mdi-sigma" lines="one" v-if="zeroSumError">
@@ -143,7 +6,7 @@ export default {
             </template>
 
             <template v-slot:actions>
-                <v-btn>
+                <v-btn @click="zeroSumError == false">
                     Dismiss
                 </v-btn>
 
@@ -209,7 +72,130 @@ export default {
     </v-card>
 </template>
 
-<style>
+<script>
+import { mapActions } from 'vuex';
+import {
+    SpreadsheetComponent, SheetsDirective, SheetDirective, RangesDirective,
+    RangeDirective, ColumnsDirective, ColumnDirective
+} from '@syncfusion/ej2-vue-spreadsheet';
+
+export default {
+    components: {
+        'ejs-spreadsheet': SpreadsheetComponent,
+        'e-sheets': SheetsDirective,
+        'e-sheet': SheetDirective,
+        'e-ranges': RangesDirective,
+        'e-range': RangeDirective,
+        'e-columns': ColumnsDirective,
+        'e-column': ColumnDirective,
+    },
+    data() {
+        return {
+            spreadsheetData: new Map(),
+            documentName: '',
+            popupLoader: false,
+            zeroSumError: '',
+            response: [],
+            rangeData: [],
+            sumTotal: null,
+            customWidth: 130,
+            openUrl: 'https://services.syncfusion.com/vue/production/api/spreadsheet/open',
+            saveUrl: 'https://services.syncfusion.com/vue/production/api/spreadsheet/save'
+            //Download and run server project - link provided in the readme file
+            // openUrl: 'https://localhost:44354/api/spreadsheet/open', 
+            // saveUrl: 'https://localhost:44354/api/spreadsheet/save'
+        }
+    },
+    mounted() {
+
+    },
+    watch: {
+        popupLoader(val) {
+            if (!val) return
+            setTimeout(() => (this.popupLoader = false), 8000)
+        },
+    },
+    methods: {
+        findDuplicates(map) {
+            const valueCount = new Map();
+            const duplicates = [];
+
+            map.forEach((value, key) => {
+                // Convert the value to a JSON string for comparison purposes
+                const stringValue = JSON.stringify(value);
+
+                if (valueCount.has(stringValue)) {
+                    valueCount.set(stringValue, valueCount.get(stringValue) + 1);
+                } else {
+                    valueCount.set(stringValue, 1);
+                }
+            });
+
+            valueCount.forEach((count, value) => {
+                if (count > 1) {
+                    duplicates.push(JSON.parse(value)); // Convert the JSON string back to an object
+                }
+            });
+
+            return duplicates;
+        },
+        ...mapActions(['addWorkbook']),
+        created: function () {
+            var spreadsheet = this.$refs.spreadsheet;
+            fetch('https://res.cloudinary.com/netpoc-inc/raw/upload/v1725342524/COMPANY-FY_xt9thn.xlsx')
+                .then((response) => {
+                    response.blob().then((fileBlob) => {
+                        var file = new File([fileBlob], "Sample.xlsx");
+                        spreadsheet.open({ file: file });
+                    })
+                })
+        },
+
+        onSave(args) {
+            args.customParams = { customParams: 'format:Csv' }
+        },
+
+        async calcSum() {
+            try {
+                const spreadsheet = this.$refs.spreadsheet;
+                const activesheet = spreadsheet.ej2Instances.activeSheetIndex
+                console.log('active sheet:', activesheet);
+
+                if (activesheet == 0) {
+                    const credit = spreadsheet.computeExpression("=SUM(C3:C300)");
+                    const debit = spreadsheet.computeExpression("=SUM(D3:D300)");
+                    const balance = credit + debit;
+                    const check = spreadsheet.computeExpression(`=IF(MAX(COUNTIF(A3:A3000, A3:A3000))>1, "Duplicates Found", "No Duplicates")`);
+                    console.log('checking : ', check);
+                    if (balance === 0) {
+                        spreadsheet.getData("TRIAL_BALANCE!A3:A100").then((data) => (this.rangeData = data));
+                        const duplicates = this.findDuplicates(this.rangeData)
+                        console.log('Duplicate: ', duplicates);
+                        spreadsheet.saveAsJson().then((Json) => (this.response = Json));
+                        this.addWorkbook(this.response);
+                        console.log('Successful Zero Sum Check: ', this.response);
+                    } else {
+                        this.zeroSumError = 'Failed Zero Sum Check!!!';
+                        console.log('Failed Zero Sum Check!!!');
+                    }
+                }
+            } catch (error) {
+                console.log('Failed Calculation', error);
+            }
+        },
+        btnClk() {
+            this.$refs.spreadsheet.save({
+                url: 'https://services.syncfusion.com/vue/production/api/spreadsheet/save',
+                fileName: 'SpreadsheetData',
+                saveType: 'Pdf'
+            })
+        }
+    }
+}
+</script>
+
+
+<style scoped>
 @import "../../../node_modules/@syncfusion/ej2-base/styles/material.css";
 @import "../../../node_modules/@syncfusion/ej2-buttons/styles/material.css";
 @import "../../../node_modules/@syncfusion/ej2-dropdowns/styles/material.css";

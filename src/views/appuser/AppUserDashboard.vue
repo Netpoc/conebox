@@ -225,7 +225,7 @@ export default {
     }
   },
   mounted() {
-    console.log('Workbooks:', this.allWorkbooks); // This should show the correct data in the console
+   
   },
   computed: {
     ...mapGetters(['allWorkbooks']),
