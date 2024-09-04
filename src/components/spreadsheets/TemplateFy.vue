@@ -107,7 +107,7 @@ export default {
         }
     },
     mounted() {
-
+        this.duplicateChecker()
     },
     watch: {
         popupLoader(val) {
@@ -154,6 +154,15 @@ export default {
         onSave(args) {
             args.customParams = { customParams: 'format:Csv' }
         },
+        duplicateChecker() {
+            const spreadsheet = this.$refs.spreadsheet;
+            const duplicate = spreadsheet.conditionalFormat({
+                type: "Duplicate",
+                cFColor: "RedFT",
+                range: "A3:A3000",
+            })
+            return duplicate;
+        },
 
         async calcSum() {
             try {
@@ -169,8 +178,15 @@ export default {
                     console.log('checking : ', check);
                     if (balance === 0) {
                         spreadsheet.getData("TRIAL_BALANCE!A3:A100").then((data) => (this.rangeData = data));
-                        const duplicates = this.findDuplicates(this.rangeData)
-                        console.log('Duplicate: ', duplicates);
+                        const dup = spreadsheet.conditionalFormat({
+                            type: "Duplicate",
+                            cFColor: "RedFT",
+                            range: "A3:A3000",
+                        })
+
+
+                        //const duplicates = this.findDuplicates(this.rangeData)
+                        console.log('Duplicate: ', dup);
                         spreadsheet.saveAsJson().then((Json) => (this.response = Json));
                         this.addWorkbook(this.response);
                         console.log('Successful Zero Sum Check: ', this.response);
