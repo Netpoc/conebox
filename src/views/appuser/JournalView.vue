@@ -77,8 +77,7 @@ export default {
         Save: function () {
             // Save the spreadsheet data as JSON.
             this.$refs.spreadsheet.saveAsJson().then((Json) => (this.response = Json));
-
-            console.log(this.response)
+            console.log('Sample:',this.response)
         },
         Open: function () {
             // Load the JSON data to the spreadsheet.

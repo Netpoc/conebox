@@ -1,22 +1,10 @@
 <template>
     <v-card>
-        <v-banner color="error" icon="mdi-sigma" lines="one" v-if="zeroSumError">
-            <template v-slot:text>
-                {{ zeroSumError }}
-            </template>
-
-            <template v-slot:actions>
-                <v-btn @click="zeroSumError == false">
-                    Dismiss
-                </v-btn>
-
-                <v-btn>
-                    Retry
-                </v-btn>
-            </template>
-        </v-banner>
-        <ejs-spreadsheet ref="spreadsheet" :created="created" :openUrl="openUrl" :saveUrl="saveUrl"
-            :beforeSave="onSave">
+        <v-alert close-label="Validation Alert"
+            text="Unable to save progress due to validation error. Kindly fix issues and try again."
+            title="Validation Error" type="warning" closable variant="tonal" v-show="zeroSumError"></v-alert>
+        <ejs-spreadsheet allowDataValidation="true" height="550px" ref="spreadsheet" :created="created"
+            :openUrl="openUrl" :saveUrl="saveUrl" :beforeSave="onSave">
             <e-sheets>
                 <e-sheet>
                     <e-columns>
@@ -36,9 +24,11 @@
         </ejs-spreadsheet>
         <v-card-actions>
             <v-spacer></v-spacer>
+            <v-btn class="ma-2" @click="validateTrialBalance">Validate <v-icon>mdi-file-check-outline</v-icon></v-btn>
             <v-dialog max-width="400">
                 <template v-slot:activator="{ props: activatorProps }">
-                    <v-btn v-bind="activatorProps">Save <v-icon>mdi-content-save-outline</v-icon></v-btn>
+                    <v-btn v-bind="activatorProps"
+                        :disabled="isDisabled">Save<v-icon>mdi-content-save-outline</v-icon></v-btn>
                 </template>
                 <template v-slot:default="{ isActive }">
                     <v-card>
@@ -51,8 +41,8 @@
                     </v-card>
                 </template>
             </v-dialog>
-            <v-btn class="ma-2" @click="calcSum">Save <v-icon>mdi-chevron-right</v-icon></v-btn>
         </v-card-actions>
+
         <v-dialog v-model="popupLoader" max-width="420" persistent>
             <v-list class="py-2" color="primary" elevation="12" rounded="lg">
                 <v-list-item prepend-icon="$vuetify-outline" title="Uploading Trial Balance...">
@@ -78,7 +68,6 @@ import {
     SpreadsheetComponent, SheetsDirective, SheetDirective, RangesDirective,
     RangeDirective, ColumnsDirective, ColumnDirective
 } from '@syncfusion/ej2-vue-spreadsheet';
-
 export default {
     components: {
         'ejs-spreadsheet': SpreadsheetComponent,
@@ -94,7 +83,8 @@ export default {
             spreadsheetData: new Map(),
             documentName: '',
             popupLoader: false,
-            zeroSumError: '',
+            zeroSumError: false,
+            isDisabled: true,
             response: [],
             rangeData: [],
             sumTotal: null,
@@ -106,6 +96,9 @@ export default {
             // saveUrl: 'https://localhost:44354/api/spreadsheet/save'
         }
     },
+    onCreated() {
+        this.validateTrialBalance()
+    },
     mounted() {
         this.duplicateChecker()
     },
@@ -116,10 +109,12 @@ export default {
         },
     },
     methods: {
+        created: function() {
+            this.$refs.spreadsheet.addCustomFunction();
+        },
         findDuplicates(map) {
             const valueCount = new Map();
             const duplicates = [];
-
             map.forEach((value, key) => {
                 // Convert the value to a JSON string for comparison purposes
                 const stringValue = JSON.stringify(value);
@@ -130,7 +125,6 @@ export default {
                     valueCount.set(stringValue, 1);
                 }
             });
-
             valueCount.forEach((count, value) => {
                 if (count > 1) {
                     duplicates.push(JSON.parse(value)); // Convert the JSON string back to an object
@@ -142,7 +136,7 @@ export default {
         ...mapActions(['addWorkbook']),
         created: function () {
             var spreadsheet = this.$refs.spreadsheet;
-            fetch('https://res.cloudinary.com/netpoc-inc/raw/upload/v1725342524/COMPANY-FY_xt9thn.xlsx')
+            fetch('https://res.cloudinary.com/netpoc-inc/raw/upload/v1725517244/COMPANY-FY_epz9n7.xlsx')
                 .then((response) => {
                     response.blob().then((fileBlob) => {
                         var file = new File([fileBlob], "Sample.xlsx");
@@ -150,7 +144,6 @@ export default {
                     })
                 })
         },
-
         onSave(args) {
             args.customParams = { customParams: 'format:Csv' }
         },
@@ -163,35 +156,57 @@ export default {
             })
             return duplicate;
         },
+        async validateTrialBalance() {
+            const spreadsheet = this.$refs.spreadsheet;
+            try {
+                const duplicate = spreadsheet.conditionalFormat({
+                    type: "Duplicate",
+                    cFColor: "RedFT",
+                    range: "A3:A3000",
+                })
+                const activesheet = spreadsheet.ej2Instances.activeSheetIndex
+                if (activesheet == 0) {
 
+                    const sumif = spreadsheet.computeExpression("=SUMIF(JOURNAL!A:A,TRIAL_BALANCE!A3,JOURNAL!C:C)");
+                    console.log('sum if:', sumif);
+                    const credit = spreadsheet.computeExpression("=SUM(C3:C3000)");
+                    const debit = spreadsheet.computeExpression("=SUM(D3:D3000)");
+                    const balance = credit + debit;
+                    if (balance === 0) {
+                        spreadsheet.saveAsJson().then((Json) => (this.response = Json));
+                        this.isDisabled = false;
+                        console.log('payload sample:', this.response);
+                        this.addWorkbook(this.response);
+
+                    } else {
+
+                        this.zeroSumError = 'Failed Zero Sum Check!!!';
+                        console.log('Failed Zero Sum Check!!!');
+                    }
+                }
+                spreadsheet.getData("TRIAL_BALANCE!A3:A100").then((data) => (this.rangeData = data));
+                const duplicates = this.findDuplicates(this.rangeData)
+                console.log('Duplicate: ', duplicates);
+                return duplicate
+            } catch (err) {
+                console.log('Something went wrong', err)
+            }
+        },
         async calcSum() {
             try {
                 const spreadsheet = this.$refs.spreadsheet;
                 const activesheet = spreadsheet.ej2Instances.activeSheetIndex
                 console.log('active sheet:', activesheet);
-
                 if (activesheet == 0) {
-                    const credit = spreadsheet.computeExpression("=SUM(C3:C300)");
-                    const debit = spreadsheet.computeExpression("=SUM(D3:D300)");
+                    const credit = spreadsheet.computeExpression("=SUM(C3:C3000)");
+                    const debit = spreadsheet.computeExpression("=SUM(D3:D3000)");
                     const balance = credit + debit;
-                    const check = spreadsheet.computeExpression(`=IF(MAX(COUNTIF(A3:A3000, A3:A3000))>1, "Duplicates Found", "No Duplicates")`);
-                    console.log('checking : ', check);
                     if (balance === 0) {
-                        spreadsheet.getData("TRIAL_BALANCE!A3:A100").then((data) => (this.rangeData = data));
-                        const dup = spreadsheet.conditionalFormat({
-                            type: "Duplicate",
-                            cFColor: "RedFT",
-                            range: "A3:A3000",
-                        })
-
-
-                        //const duplicates = this.findDuplicates(this.rangeData)
-                        console.log('Duplicate: ', dup);
                         spreadsheet.saveAsJson().then((Json) => (this.response = Json));
                         this.addWorkbook(this.response);
                         console.log('Successful Zero Sum Check: ', this.response);
                     } else {
-                        this.zeroSumError = 'Failed Zero Sum Check!!!';
+                        this.zeroSumError = true;
                         console.log('Failed Zero Sum Check!!!');
                     }
                 }

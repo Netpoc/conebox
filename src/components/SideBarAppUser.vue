@@ -5,29 +5,40 @@
                 <template v-slot:prepend>
                     <v-icon :icon="item.icon"></v-icon>
                 </template>
-                <v-list-item-title v-text="item.text"></v-list-item-title>
+                <v-list-item-title>{{ item.text }}</v-list-item-title>
             </v-list-item>
         </v-list>
+        
     </v-sheet>
 </template>
 <script>
 export default {
     components: {
-        
+
     },
     data() {
         return {
             items: [
                 { text: "Dashboard", icon: "mdi-view-dashboard", to: "app_user_dashboard" },
-                { text: "Trial Balance", icon: "mdi-file-compare", to: "trial_balance" },
-                
-                { text: "Journal", icon: "mdi-clipboard-text-multiple-outline", to: "journal" },
                 { text: "Mapping", icon: "mdi-map-marker-distance", to: "mapping" },
-                { text: "FS Designer", icon: "mdi-vector-curve", to: "/fsdesigner"},
+                { text: "FS Designer", icon: "mdi-vector-curve", to: "/journal" },
                 { text: "Settings", icon: "mdi-cog", to: "app_user_setting" },
-                { text: "Logout", icon: "mdi-logout", to: "/" },
+                { text: "Logout", icon: "mdi-logout", to: "logoutControl()" },
             ],
         }
+    },
+    methods: {
+        logoutControl() {
+            this.$store
+                .dispatch("logout")
+                .then(() => {
+                    this.$store.commit("resetState");
+                    this.$router.push("/");
+                })
+                .catch((err) => {
+                    console.error("Error logging out:", err);
+                });
+        },
     }
 }
 </script>

@@ -101,17 +101,17 @@
         <v-card class="rounded-xl pa-4 mr-5" min-width="400">
           <a-form
             :form="form"
-            @submit.prevent="handleSubmit"
+            @submit.prevent="login()"
             layout="vertical"
             class="login-form"
           >
             <h2 class="mb-3">Login</h2>
             Username/Email:
             <a-form-item
-              name="username"
+              name="Email"
               rules="[ { required: true, message: 'Please input your username!' } ]"
             >
-              <a-input v-model:value="username" placeholder="Username">
+              <a-input v-model:value="email" placeholder="Email">
                 <template #prefix>
                   <UserOutlined />
                 </template>
@@ -184,31 +184,38 @@ export default {
   data() {
     return {
       dialog: false,
-      username: "",
-      password: "",
-      err: null,
       email: "",
+      password: "",
+      err: null,      
       confirm: "",
     };
   },
   methods: {
-    handleSubmit() {
-      if (this.username === "Admin" && this.password === "Password") {
-        this.loggedIn = true;
-        this.user = { username: this.username };
-        // eslint-disable-next-line no-undef
-        this.$router.push({ name: "DashboardView" });
-      } else if (this.username === "Tenant" && this.password === "Password") {
-        this.user = { username: this.username };
-        this.$router.push({ name: "tenant_dashboard" });
-      } else if (this.username === "App_user" && this.password === "Password") {
-        this.$router.push({name: 'appUserDashboard'})
-        console.log("Tenant Login Successful");
-      } else {
-        this.err = true;
-        console.log("Error!!!");
-      }
-    },
+    login() {
+      this.err = false;      
+      this.$store.dispatch("login", {
+        email: this.email,
+        password: this.password
+      })      
+        .then(() => {          
+          const data = JSON.parse(localStorage.getItem('my-app'));
+          const user = data.user; 
+          console.log(user);
+          
+          if (user.role === 'Tenant') {
+            this.$router.push("/tenant_dashboard");  
+          } else {
+            console.log('Invalid User Role');
+          }
+              
+        })
+        .catch(err => {
+          this.loginLoader = true;
+          this.err = true
+          console.log(err)
+          this.loginLoader = false;
+        })
+    }
   },
 };
 </script>

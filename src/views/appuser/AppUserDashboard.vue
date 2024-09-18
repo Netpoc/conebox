@@ -56,18 +56,6 @@
 
             </v-card-actions>
           </v-card>
-          <v-card class="ma-3">
-            <v-card-title>
-              Modify FY
-            </v-card-title>
-            <v-card-text>
-              
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer />
-              <v-btn>Start</v-btn>
-            </v-card-actions>
-          </v-card>
           <v-table height="300px">
             <thead>
               <tr>
@@ -95,9 +83,6 @@
             </tbody>
           </v-table>
         </v-card>
-        <v-sheet class="d-flex pa-3">
-
-        </v-sheet>
       </v-col>
       <v-col md="4">
         <v-card class="ma-4 pa-4">
@@ -108,7 +93,47 @@
             <ul>
               <li v-for="(workbook, index) in allWorkbooks" :key="index">
                 Workbook {{ index + 1 }}
-                <button @click="deleteWorkbook(index)">Delete</button>
+                <v-btn @click="deleteWorkbook(index)">Delete</v-btn>
+                <v-dialog v-model="openSpreadsheet">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-btn v-bind="activatorProps" @click="openWorkbook(index)">Open</v-btn>
+                  </template>
+                  <template>
+                    <v-card class="pa-5 ma-2">
+                      <ejs-spreadsheet ref="openspreadsheet" :openUrl="openUrl" :saveUrl="saveUrl">
+                        <e-sheets>
+                          <e-sheet name="Journal Template">
+                            <e-ranges>
+                              <e-range :dataSource="dataSource"></e-range>
+                            </e-ranges>
+                            <e-rows>
+                              <e-row :index="rowIndex" :cells="cells"></e-row>
+                            </e-rows>
+                            <e-columns>
+                              <e-column :width="150"></e-column>
+                              <e-column :width="100"></e-column>
+                              <e-column :width="120"></e-column>
+                              <e-column :width="120"></e-column>
+                              <e-column :width="100"></e-column>
+                              <e-column :width="120"></e-column>
+                              <e-column :width="120"></e-column>
+                            </e-columns>
+                            <e-ranges>
+                              <e-range></e-range>
+                            </e-ranges>
+                          </e-sheet>
+                        </e-sheets>
+                      </ejs-spreadsheet>
+
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="Save">Save JSON</v-btn>
+                        <v-btn @click="Open">Load JSON</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </template>
+                </v-dialog>
+
               </li>
             </ul>
           </v-card-text>
@@ -124,22 +149,31 @@
 </template>
 
 <script>
+import { SpreadsheetComponent, SheetDirective, RowsDirective, RowDirective, SheetsDirective, ColumnsDirective, ColumnDirective, RangesDirective, RangeDirective, getRangeAddress, SpreadsheetPlugin } from '@syncfusion/ej2-vue-spreadsheet';
 import { mapGetters, mapActions } from 'vuex';
 import Nav from "@/components/NavBar.vue"
 import SideBar from "@/components/SideBarAppUser.vue"
-import TrialBalanceSheet from "@/components/spreadsheets/TrialBalance.vue"
-import JournalSpreadsheet from "@/components/spreadsheets/JournalSpreadsheet.vue";
 import TemplateFy from '@/components/spreadsheets/TemplateFy.vue';
 export default {
   components: {
     Nav,
     SideBar,
     TemplateFy,
-    TrialBalanceSheet,
-    JournalSpreadsheet
+    'ejs-spreadsheet': SpreadsheetComponent,
+    'e-sheet': SheetDirective,
+    'e-sheets': SheetsDirective,
+    'e-row': RowDirective,
+    'e-rows': RowsDirective,
+    'e-column': ColumnDirective,
+    'e-columns': ColumnsDirective,
+    'e-range': RangeDirective,
+    'e-ranges': RangesDirective,
+    ejsSpreadsheet: SpreadsheetPlugin
+
   },
   data() {
     return {
+      openSpreadsheet: false,
       template: false,
       trialbalance: [],
       charts: [
@@ -225,7 +259,7 @@ export default {
     }
   },
   mounted() {
-   
+
   },
   computed: {
     ...mapGetters(['allWorkbooks']),
@@ -233,6 +267,18 @@ export default {
   },
   methods: {
     ...mapActions(['deleteWorkbook']),
+    openWorkbook(index) {
+      const selectedWorkbook = this.allWorkbooks[index];
+      if (selectedWorkbook) {
+        // Load the workbook into the spreadsheet using Syncfusion
+        console.log('Test Select', selectedWorkbook)
+        this.$refs.spreadsheet.openFromJson({ file: selectedWorkbook });
+      }
+    },
+    Open: function () {
+      // Load the JSON data to the spreadsheet.
+      this.$refs.openspreadsheet.openFromJson({ file: this.response.jsonObject });
+    },
   }
 }
 </script>
