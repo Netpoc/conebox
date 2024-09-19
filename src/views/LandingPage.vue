@@ -198,7 +198,7 @@ export default {
         password: this.password
       })      
         .then(() => {          
-          const data = JSON.parse(localStorage.getItem('my-app'));
+          const data = JSON.parse(localStorage.getItem('vuex'));
           const user = data.user; 
           console.log(user);
           

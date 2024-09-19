@@ -2,8 +2,7 @@ import { createStore } from "vuex";
 import VuexPersist from "vuex-persist";
 import axios from "axios";
 
-const vuexPersist = new VuexPersist({
-  key: "my-app", // The key to store the state on in the storage provider.
+const vuexPersist = new VuexPersist({ 
   storage: localStorage, // or sessionStorage
 });
 
@@ -45,7 +44,7 @@ export default createStore({
   actions: {
     async login({ commit }, { email, password }) {
       try {
-        const response = await axios.post(`http://localhost:7000/api/auth/login`, {
+        const response = await axios.post(`https://conebackend.onrender.com/api/auth/login`, {
           email,
           password
         });
