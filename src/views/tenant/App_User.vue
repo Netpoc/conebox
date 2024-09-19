@@ -6,25 +6,35 @@
       <v-btn icon @click="dialog = true"><v-icon>mdi-plus</v-icon></v-btn>
       <v-dialog v-model="dialog" width="auto">
         <v-card min-width="400" class="ma-3 pa-3 rounded-lg">
-          <a-form
-            :form="form"
-            @submit.prevent="sendLink()"
-            layout="vertical"
-            class="login-form"
+          <a-result
+          v-if="success === true"
+          status="success"
+          title="Email Sent Successfully"
           >
-          <h3>Add App User</h3>
-          Email:
-          <a-input class="mb-3" v-model:value="email" placeholder="Enter Email">
-            <template #prefix>
-              <UserOutlined />
-            </template>
-          </a-input>
-          <a-form-item>
-            <a-button block html-type="submit" class="button">
-              Send Invite
-            </a-button>
-          </a-form-item>
-        </a-form>
+          <a-button>Close</a-button>
+          </a-result>
+          <a-result
+          v-if="fail === true" 
+          status="error"
+          title="Email Sent Successfully"
+          >
+          <a-button>Close</a-button>
+          </a-result>
+          <a-form :form="form" @submit.prevent="sendLink()" layout="vertical" class="login-form">
+            <h3>Add App User</h3>
+            Email:
+            <a-input class="mb-3" v-model:value="email" placeholder="Enter Email">
+              <template #prefix>
+                <UserOutlined />
+              </template>
+            </a-input>
+            <a-form-item>
+              <a-button block html-type="submit" class="button">
+                Send Invite
+              </a-button>
+              <v-alert icon="$alert" type="error" class="mt-2" v-if="errorMessage">{{ errorMessage }}</v-alert>
+            </a-form-item>
+          </a-form>
         </v-card>
       </v-dialog>
     </div>
@@ -70,6 +80,10 @@ export default {
   },
   data() {
     return {
+      errorMessage: '',
+      fail: false,
+      success: false,
+      loading: false,
       email: '',
       dialog: false,
       desserts: [],
@@ -121,7 +135,7 @@ export default {
     this.initialize()
   },
   methods: {
-    async sendLink(){
+    async sendLink() {
       const token = localStorage.getItem('authToken');
       const data = JSON.parse(localStorage.getItem('vuex'));
       const rc_number = data.user.rc_number;
@@ -130,17 +144,20 @@ export default {
         const response = await axios.post('https://conebackend.onrender.com/api/tenant/send-link', {
           email: this.email,
           rc_number: rc_number
-        },  {headers: {
-          'Authorization': `Bearer ${token}`
-        }})
-        
-        if(response.status===200){
-          alert('Registration link sent!');
+        }, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+
+        if (response.status === 200) {
+          this.success = true;
         } else {
-          alert('Failed to send link')
+          this.fail = true;
         }
-      } catch(err) {
-        console.log(err)
+      } catch (err) {
+        this.errorMessage = err.message;
+        console.log(err.message)
       }
     },
     initialize() {
