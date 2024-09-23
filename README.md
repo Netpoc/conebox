@@ -17,6 +17,17 @@ This application is designed for corporates to manage and work on their financia
 - API: RESTful API (if applicable)
 - Storage: LocalStorage for temporary data storage
 
+## Tenant Section
+### Adding App_Users
+In the Tenant section of the app, you can add new App_Users easily by following these steps:
+
++ Navigate to the App User route by clicking on "App User" from the side menu.
++ In the App User route, click the + button to add a new user.
++ A dialog will pop up asking for the email address of the potential App_User.
++ Enter the email address in the provided textbox.
++ Click the Send Invite button. This will send a registration link to the email address provided.
+The registration link will include the tenant's RC_Number to ensure that the user is correctly associated with the tenant during the registration process. The link opens the registration page with the App_User's email and RC_Number prefilled, ensuring a seamless experience.
+
 # coneBox
 
 ## Project setup

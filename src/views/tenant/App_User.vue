@@ -1,24 +1,16 @@
 <template>
   <Nav />
   <v-main>
-    <div class="d-flex align-center">
-      <h1 class="ma-5">App User</h1>
+    <div class="pa-2 d-flex align-center">
+      <h1 class="ma-2">App User</h1>
       <v-btn icon @click="dialog = true"><v-icon>mdi-plus</v-icon></v-btn>
       <v-dialog v-model="dialog" width="auto">
         <v-card min-width="400" class="ma-3 pa-3 rounded-lg">
-          <a-result
-          v-if="success === true"
-          status="success"
-          title="Email Sent Successfully"
-          >
-          <a-button>Close</a-button>
+          <a-result v-if="success === true" status="success" title="Email Sent Successfully">
+            <a-button>Close</a-button>
           </a-result>
-          <a-result
-          v-if="fail === true" 
-          status="error"
-          title="Email Sent Successfully"
-          >
-          <a-button>Close</a-button>
+          <a-result v-if="fail === true" status="error" title="Email Sent Successfully">
+            <a-button>Close</a-button>
           </a-result>
           <a-form :form="form" @submit.prevent="sendLink()" layout="vertical" class="login-form">
             <h3>Add App User</h3>
@@ -44,21 +36,37 @@
       </v-col>
       <v-col class="flex-grow-1 flex-shrink-0" md="6" style="min-width: 100px; max-width: 100%">
         <v-sheet class="ma-3 rounded-xl">
-          <v-data-table :headers="headers" :items="desserts" :sort-by="[{ key: 'calories', order: 'asc' }]"
-            :items-per-page="10">
-            <template v-slot:item.actions="{ item }">
-              <v-btn icon variant="text"><v-icon>mdi-account-tie-hat</v-icon></v-btn>
-              <v-btn icon variant="text" class="ma-2"><v-icon>mdi-account-cog</v-icon></v-btn>
-            </template>
-            <template v-slot:no-data>
-              <v-btn color="primary" @click="initialize"> Reset </v-btn>
-            </template>
-            <template v-slot:bottom>
-              <div class="text-center pt-2">
-                <v-pagination v-model="editedIndex" :length="pageCount"></v-pagination>
-              </div>
-            </template>
-          </v-data-table>
+          <v-table>
+    <thead>
+      <tr>
+        <th class="text-left">
+          Name
+        </th>
+        <th class="text-left">
+          Last Login
+        </th>
+        <th class="text-left">
+          Total Edits
+        </th>
+        <th class="text-left">
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr        
+      >
+        <td>Mathew Makinwa</td>
+        <td>today, 3:29pm</td>
+        <td>14</td>
+        <td>
+          <v-btn icon variant="text"><v-icon>mdi-account-edit-outline</v-icon></v-btn>
+          <v-btn icon variant="text"><v-icon>mdi-open-in-new</v-icon></v-btn>
+          <v-btn icon variant="text"><v-icon>mdi-delete-empty</v-icon></v-btn>
+        </td>
+      </tr>
+    </tbody>
+  </v-table>
         </v-sheet>
       </v-col>
       <v-col class="flex-grow-0 flex-shrink-1" md="3" style="min-width: 100px">
@@ -89,31 +97,58 @@ export default {
       desserts: [],
       item: '',
       editedIndex: -1,
-      editedItem: {
-        name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0,
-      },
-      defaultItem: {
-        name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0,
-      },
-      headers: [
-        {
-          title: "Tenant Name",
-          align: "start",
-          sortable: false,
-          key: "name",
-        },
-        { title: "Company", key: "firm" },
-        { title: "Due Date", key: "calories" },
-        { title: "Roles", key: "actions", sortable: false },
-      ],
+      desserts: [
+          {
+            name: 'Frozen Yogurt',
+            calories: 159,
+            actions: ''
+          },
+          {
+            name: 'Ice cream sandwich',
+            calories: 237,
+            actions: ''
+          },
+          {
+            name: 'Eclair',
+            calories: 262,
+            actions: ''
+          },
+          {
+            name: 'Cupcake',
+            calories: 305,
+            actions: ''
+          },
+          {
+            name: 'Gingerbread',
+            calories: 356,
+            actions: ''
+          },
+          {
+            name: 'Jelly bean',
+            calories: 375,
+            actions: ''
+          },
+          {
+            name: 'Lollipop',
+            calories: 392,
+            actions: ''
+          },
+          {
+            name: 'Honeycomb',
+            calories: 408,
+            actions: ''
+          },
+          {
+            name: 'Donut',
+            calories: 452,
+            actions: ''
+          },
+          {
+            name: 'KitKat',
+            calories: 518,
+            actions: ''
+          },
+        ],
     };
   },
   computed: {
