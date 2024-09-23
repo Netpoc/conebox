@@ -9,54 +9,31 @@
           facilis. Debitis ipsum voluptate facere sit?
           <br />
 
-          <a-button class="mt-5 button" @click="dialog = true"
-            >Get Started</a-button
-          >
+          <a-button class="mt-5 button" @click="dialog = true">Get Started</a-button>
           <v-dialog v-model="dialog" width="auto">
             <v-card min-width="400" class="ma-3 pa-3 rounded-lg">
               <h3>Add Tenant</h3>
               Enter Name
-              <a-input
-                class="mb-3"
-                v-model:value="tenant"
-                placeholder="Enter Name"
-              >
+              <a-input class="mb-3" v-model:value="tenant" placeholder="Enter Name">
                 <template #prefix>
                   <UserOutlined />
                 </template>
               </a-input>
 
               Address
-              <a-input
-                class="mb-3"
-                v-model:value="address"
-                placeholder="Enter Address"
-              >
+              <a-input class="mb-3" v-model:value="address" placeholder="Enter Address">
                 <template #prefix>
                   <AimOutlined />
                 </template>
               </a-input>
 
               Select a company:
-              <a-select
-                class="mb-3"
-                v-model:value="value"
-                show-search
-                placeholder="Select a company"
-                style="width: 200px"
-                :options="options"
-                :filter-option="filterOption"
-                @focus="handleFocus"
-                @blur="handleBlur"
-                @change="handleChange"
-              ></a-select>
+              <a-select class="mb-3" v-model:value="value" show-search placeholder="Select a company"
+                style="width: 200px" :options="options" :filter-option="filterOption" @focus="handleFocus"
+                @blur="handleBlur" @change="handleChange"></a-select>
               Enter Email:
 
-              <a-input
-                class="mb-3"
-                v-model:value="email"
-                placeholder="Enter email"
-              >
+              <a-input class="mb-3" v-model:value="email" placeholder="Enter email">
                 <template #prefix>
                   <MailOutlined />
                 </template>
@@ -65,12 +42,7 @@
                 <a-checkbox v-model:checked="checked">Group option</a-checkbox>
               </a-form-item>
               <a-form-item>
-                <a-button
-                  block                  
-                  type="primary"
-                  class="login-button"                  
-                  @click="confirm = true"                  
-                >
+                <a-button block type="primary" class="login-button" @click="confirm = true">
                   Continue
                 </a-button>
               </a-form-item>
@@ -79,18 +51,11 @@
 
           <!--Email Sent Confirmation-->
           <v-dialog>
-            <v-card
-              max-width="400"
-              prepend-icon="mdi-update"
+            <v-card max-width="400" prepend-icon="mdi-update"
               text="Your application will relaunch automatically after the update is complete."
-              title="Update in progress"
-            >
+              title="Update in progress">
               <template v-slot:actions>
-                <v-btn
-                  class="ms-auto"
-                  text="Ok"
-                  @click="confirm = false"
-                ></v-btn>
+                <v-btn class="ms-auto" text="Ok" @click="confirm = false"></v-btn>
               </template>
             </v-card>
           </v-dialog>
@@ -99,18 +64,10 @@
       </v-col>
       <v-col md="3">
         <v-card class="rounded-xl pa-4 mr-5" min-width="400">
-          <a-form
-            :form="form"
-            @submit.prevent="login()"
-            layout="vertical"
-            class="login-form"
-          >
+          <a-form :form="form" @submit.prevent="login()" layout="vertical" class="login-form">
             <h2 class="mb-3">Login</h2>
             Username/Email:
-            <a-form-item
-              name="Email"
-              rules="[ { required: true, message: 'Please input your username!' } ]"
-            >
+            <a-form-item name="Email" rules="[ { required: true, message: 'Please input your username!' } ]">
               <a-input v-model:value="email" placeholder="Email">
                 <template #prefix>
                   <UserOutlined />
@@ -118,47 +75,36 @@
               </a-input>
             </a-form-item>
             Password:
-            <a-form-item
-              name="password"
-              rules="[ { required: true, message: 'Please input your password!' } ]"
-            >
-              <a-input-password
-                class="pa-2"
-                v-model:value="password"
-                placeholder="Password"
-              >
+            <a-form-item name="password" rules="[ { required: true, message: 'Please input your password!' } ]">
+              <a-input-password class="pa-2" v-model:value="password" placeholder="Password">
                 <template #prefix>
                   <LockOutlined />
                 </template>
               </a-input-password>
             </a-form-item>
-            <a-alert
-              v-if="err == true"
-              class="mb-3"
-              message="Invalid Username or Password"
-              type="error"
-            />
+            <a-alert v-if="err == true" class="mb-3" message="Invalid Username or Password" type="error" />
             <a-form-item>
-              <a-button
-                block
-                html-type="submit"
-                type="primary"
-                class="login-button"
-              >
-                Log in
-              </a-button>
+              <v-dialog v-model="loader" max-width="320" persistent>
+                <template v-slot:activator="{ props: activatorProps }">
+                  <a-button v-bind="activatorProps" block html-type="submit" type="primary" class="login-button">
+                    Log in
+                  </a-button>
+                </template>
+                <template v-slot:default="{ isActive }">
+                  <v-card class="pa-5 ma-5">
+                    User Profile Loading...
+                    <v-progress-linear color="#ffc107" indeterminate></v-progress-linear>
+                  </v-card>
+                </template>
+              </v-dialog>
             </a-form-item>
             <a-form-item>
-              <a-button
-                block
-                type="#434343"
-                html-type="submit"
-                class="custom-button"
-              >
+              <a-button block type="#434343" html-type="submit" class="custom-button">
                 Cancel
               </a-button>
             </a-form-item>
           </a-form>
+
         </v-card>
       </v-col>
     </v-row>
@@ -183,37 +129,45 @@ export default {
   },
   data() {
     return {
+      loader: false,
       dialog: false,
       email: "",
       password: "",
-      err: null,      
+      err: null,
       confirm: "",
     };
   },
   methods: {
     login() {
-      this.err = false;      
+      this.loader = true;
+      this.err = false;
       this.$store.dispatch("login", {
         email: this.email,
         password: this.password
-      })      
-        .then(() => {          
+      })
+        .then(() => {
           const data = JSON.parse(localStorage.getItem('vuex'));
-          const user = data.user; 
-          console.log(user);
-          
+          const user = data.user;
           if (user.role === 'Tenant') {
-            this.$router.push("/tenant_dashboard");  
-          } else {
+            this.$router.push("/tenant_dashboard");
+            this.loader = false;
+          } else if (user.role === 'Admin') {
+            this.$router.push("/dashboard");
+            this.loader = false;
+          } else if (user.role === 'App_User') {
+            this.$router.push("/app_user_dashboard");
+            this.loader = false;
+          }
+          else {
+            this.loader = false;
             console.log('Invalid User Role');
           }
-              
         })
         .catch(err => {
-          this.loginLoader = true;
           this.err = true
           console.log(err)
-          this.loginLoader = false;
+          this.loader = false;
+
         })
     }
   },
@@ -227,16 +181,21 @@ html,
   height: 100%;
   margin: 0;
 }
+
 .button {
-  background-color: #ffc107; /* Custom button color */
+  background-color: #ffc107;
+  /* Custom button color */
 }
+
 .login-button {
   width: 100%;
-  background-color: #ffc107; /* Custom button color */
+  background-color: #ffc107;
+  /* Custom button color */
 }
 
 .custom-button {
   width: 100%;
-  background-color: #434343; /* Custom button color */
+  background-color: #434343;
+  /* Custom button color */
 }
 </style>
