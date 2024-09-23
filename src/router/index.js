@@ -15,6 +15,7 @@ import Journal from '../views/appuser/JournalView.vue'
 import AppUserSetting from '../views/appuser/AppUserSettings.vue'
 import Mapping from '../views/appuser/MappingView.vue'
 import FsDesigner from '@/views/appuser/FsDesigner.vue'
+import Register from '@/views/AppUserRegister.vue'
 
 const routes = [
   {
@@ -67,6 +68,11 @@ const routes = [
     component: Tenant_Setting
   },
   //App User Routes
+  {
+    path: '/register',
+    name: 'AppUserRegister',
+    component: Register
+  },
   {
     path: '/app_user_dashboard',
     name: 'appUserDashboard',
