@@ -7,8 +7,9 @@
                 </template>
                 <v-list-item-title>{{ item.text }}</v-list-item-title>
             </v-list-item>
+            <v-btn block @click="logoutControl"><v-icon>mdi-power-settings</v-icon>Logout</v-btn>
         </v-list>
-        
+
     </v-sheet>
 </template>
 <script>
@@ -23,15 +24,14 @@ export default {
                 { text: "Mapping", icon: "mdi-map-marker-distance", to: "mapping" },
                 { text: "FS Designer", icon: "mdi-vector-curve", to: "/journal" },
                 { text: "Settings", icon: "mdi-cog", to: "app_user_setting" },
-                { text: "Logout", icon: "mdi-logout", to: "logoutControl()" },
+                
             ],
         }
     },
     methods: {
         logoutControl() {
             this.$store
-                .dispatch("logout")
-                .then(() => {
+                .dispatch("logout").then(() => {
                     this.$store.commit("resetState");
                     this.$router.push("/");
                 })

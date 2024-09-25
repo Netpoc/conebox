@@ -92,8 +92,8 @@
                 </template>
                 <template v-slot:default="{ isActive }">
                   <v-card class="pa-5 ma-5">
-                    User Profile Loading...
-                    <v-progress-linear color="#ffc107" indeterminate></v-progress-linear>
+                    Loading User Profile...
+                    <v-progress-linear class="mt-3" color="#ffc107" indeterminate></v-progress-linear>
                   </v-card>
                 </template>
               </v-dialog>
@@ -147,7 +147,7 @@ export default {
       })
         .then(() => {
           const data = JSON.parse(localStorage.getItem('vuex'));
-          const user = data.user;
+          const user = data.user || data.appuser;
           if (user.role === 'Tenant') {
             this.$router.push("/tenant_dashboard");
             this.loader = false;
