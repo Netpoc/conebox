@@ -87,7 +87,8 @@ export default {
                     this.loader = false;
                     alert('Registration failed. Please try again.',);
                 }
-            } catch (error) {                
+            } catch (error) {               
+                console.log(error) 
                 alert('An error occurred. Please try again.');
             }
         }
