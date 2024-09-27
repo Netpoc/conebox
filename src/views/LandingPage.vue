@@ -12,11 +12,18 @@
           <a-button class="mt-5 button" @click="dialog = true">Get Started</a-button>
           <v-dialog v-model="dialog" width="auto">
             <v-card min-width="400" class="ma-3 pa-3 rounded-lg">
-              <h3>Add Tenant</h3>
-              Enter Name
-              <a-input class="mb-3" v-model:value="tenant" placeholder="Enter Name">
+              <h3>Get Started</h3>
+              Company Name
+              <a-input class="mb-3" v-model:value="name" placeholder="Enter Company Name">
                 <template #prefix>
                   <UserOutlined />
+                </template>
+              </a-input>
+
+              RC Number
+              <a-input class="mb-3" v-model:value="rc_number" placeholder="Enter RC Number">
+                <template #prefix>
+                  <FieldNumberOutlined />
                 </template>
               </a-input>
 
@@ -26,16 +33,32 @@
                   <AimOutlined />
                 </template>
               </a-input>
-
-              Select a company:
-              <a-select class="mb-3" v-model:value="value" show-search placeholder="Select a company"
-                style="width: 200px" :options="options" :filter-option="filterOption" @focus="handleFocus"
-                @blur="handleBlur" @change="handleChange"></a-select>
-              Enter Email:
+              Email:
 
               <a-input class="mb-3" v-model:value="email" placeholder="Enter email">
                 <template #prefix>
                   <MailOutlined />
+                </template>
+              </a-input>
+              Alternate Email:
+
+              <a-input class="mb-3" v-model:value="alt_email" placeholder="Enter Alternate Email">
+                <template #prefix>
+                  <MailOutlined />
+                </template>
+              </a-input>
+              Phone:
+
+              <a-input class="mb-3" v-model:value="phone" placeholder="Enter Phone">
+                <template #prefix>
+                  <PhoneOutlined />
+                </template>
+              </a-input>
+              Alternate Phone:
+
+              <a-input class="mb-3" v-model:value="alt_phone" placeholder="Enter Alternate Phone">
+                <template #prefix>
+                  <PhoneOutlined />
                 </template>
               </a-input>
               <a-form-item class="ma-1">
@@ -113,22 +136,31 @@
 
 <script>
 import {
+  PhoneOutlined,
   UserOutlined,
   LockOutlined,
   AimOutlined,
+  FieldNumberOutlined,
   MailOutlined,
 } from "@ant-design/icons-vue";
 
 export default {
   name: "LandingPage",
   components: {
+    PhoneOutlined,
     LockOutlined,
     UserOutlined,
     AimOutlined,
     MailOutlined,
+    FieldNumberOutlined
   },
   data() {
     return {
+      name: '',
+      phone: '',
+      alt_email: '',
+      alt_phone: '',
+      address: '',
       loader: false,
       dialog: false,
       email: "",
