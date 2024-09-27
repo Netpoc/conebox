@@ -7,10 +7,10 @@
                     <v-card-text>
                         <v-form @submit.prevent="submitForm">
                             <!-- Name -->
-                            <v-text-field v-model="name" label="Full Name"></v-text-field>
+                            <v-text-field v-model="name" label="Company Name" readonly></v-text-field>
 
                             <!-- Phone Number -->
-                            <v-text-field v-model="phone" label="Phone Number"></v-text-field>
+                            <v-text-field v-model="phone" label="Phone Number" readonly></v-text-field>
 
                             <!-- Email (pre-filled) -->
                             <v-text-field v-model="email" label="Email" readonly></v-text-field>

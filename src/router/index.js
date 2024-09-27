@@ -16,6 +16,7 @@ import AppUserSetting from '../views/appuser/AppUserSettings.vue'
 import Mapping from '../views/appuser/MappingView.vue'
 import FsDesigner from '@/views/appuser/FsDesigner.vue'
 import Register from '@/views/AppUserRegister.vue'
+import TenantRegister from '@/views/TenantRegister.vue'
 
 const routes = [
   {
@@ -51,6 +52,11 @@ const routes = [
     path: '/tenant_dashboard',
     name: 'tenant_dashboard',
     component: Tenant_Dashboard
+  },
+  {
+    path: '/tenant_register',
+    name: 'tenant_register',
+    component: TenantRegister
   },
   {
     path: '/subsidiary_page',
