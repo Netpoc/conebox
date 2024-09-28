@@ -61,9 +61,6 @@
                   <PhoneOutlined />
                 </template>
               </a-input>
-              <a-form-item class="ma-1">
-                <a-checkbox v-model:checked="checked">Group option</a-checkbox>
-              </a-form-item>
               <a-form-item>
                 <a-button block type="primary" class="login-button" @click="confirm = true">
                   Continue
@@ -167,6 +164,7 @@ export default {
       password: "",
       err: null,
       confirm: "",
+      checked: false,
     };
   },
   methods: {

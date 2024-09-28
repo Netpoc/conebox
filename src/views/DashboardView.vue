@@ -61,13 +61,16 @@
               <thead>
                 <tr>
                   <th class="text-left">
-                    <strong>Description</strong>
+                    <strong>Tenant</strong>
                   </th>
                   <th class="text-left">
-                    <strong>Type</strong>
+                    <strong>CPU Usage</strong>
                   </th>
                   <th class="text-left">
-                    <strong>Due Date</strong>
+                    <strong>Storage</strong>
+                  </th>
+                  <th class="text-left">
+                    <strong>Payment Due</strong>
                   </th>
                 </tr>
               </thead>
@@ -76,6 +79,7 @@
                   <td>{{ item.name }}</td>
                   <td>{{ item.calories }}</td>
                   <td>{{ item.date }}</td>
+                  <td>$1,234.00</td>
                 </tr>
               </tbody>
             </v-table>

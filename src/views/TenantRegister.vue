@@ -1,7 +1,7 @@
 <template>
     <v-container class="fill-height" fluid>
         <v-row justify="center" align="center">
-            <v-col cols="12" sm="8" md="6">
+            <v-col cols="12" sm="8" md="5">
                 <v-card>
                     <v-card-title class="headline">Complete Your Registration</v-card-title>
                     <v-card-text>
@@ -24,6 +24,14 @@
                             <!-- Verify Password -->
                             <v-text-field v-model="verifyPassword" label="Verify Password" type="password"
                                 required></v-text-field>
+                                
+                            <v-checkbox v-model="checked" label="Group Class?"></v-checkbox>
+
+                            <!-- Phone Number -->
+                            <v-text-field v-if="checked" v-model="phone" label="Parent Company"></v-text-field>
+
+                            <!-- Phone Number -->
+                            <v-text-field v-if="checked" v-model="phone" label="What % is owned by Parent Company?"></v-text-field>
                         </v-form>
                     </v-card-text>
                     <v-card-actions>
@@ -47,6 +55,7 @@ import axios from 'axios';
 export default {
     data() {
         return {
+            checked: false,
             success: false,
             loader: false,
             email: '',
