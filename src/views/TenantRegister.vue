@@ -68,8 +68,10 @@ export default {
     },
     created() {
         // Get query parameters from the URL
-        this.email = this.$route.query.email;
+        this.name = this.$route.query.name;
+        this.phone = this.$route.query.phone;
         this.rcNumber = this.$route.query.rc_number;
+        this.email = this.$route.query.email;
     },
     methods: {
         async submitForm() {

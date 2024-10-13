@@ -68,12 +68,60 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>XYZ Limited</td>
-                  <td>RC 012309</td>
-                  <td><v-sheet class="rounded-xl pa-1 d-flex justify-center" color="warning">Pending Activation</v-sheet></td>
+                <tr v-for="item in tenants" :key="item">
+                  <td>{{item.name}}</td>
+                  <td>{{item.rc_number}}</td>
                   <td>
-                    <v-btn variant="text" icon><v-icon>mdi-account-check</v-icon></v-btn>
+                    <v-sheet v-if="item.activated === false" class="rounded-xl pa-1 d-flex justify-center" color="warning"><small>Pending Activation</small></v-sheet>
+                    <v-sheet v-else class="rounded-xl pa-1 d-flex justify-center" color="success"><small>Activated</small></v-sheet>
+                  </td>
+                  <td>
+                    <v-dialog scrollable>
+                      <template v-slot:activator="{props: activatorProps}">
+                        <v-btn @click="showTenant(item.rc_number)" v-bind="activatorProps" variant="text" icon>
+                          <v-icon>mdi-account-check</v-icon>
+                        </v-btn>
+                      </template>
+                      <template v-slot:default="{isActive}">
+                        <v-sheet class="pa-4 text-center mx-auto" max-width="600">
+                          <v-card>
+                            <v-card-title>Complete Registration</v-card-title>
+                            <v-card-text>
+                              <v-table>
+                                <thead>
+                                  <tr>
+                                    <th>Biodata</th>
+                                    <th class="text-right">Information</th>
+                                  </tr>
+                                </thead>
+                                <tbody v-if="client">
+                                  <tr>
+                                    <td>Name</td>
+                                    <td class="text-right">{{client.name}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Email</td>
+                                    <td class="text-right">{{client.email}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Phone</td>
+                                    <td class="text-right">{{client.phone}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Role</td>
+                                    <td class="text-right">{{client.role}}</td>
+                                  </tr>
+                                </tbody>
+                              </v-table>
+                            </v-card-text>
+                            <v-card-actions>
+                              <v-spacer/>
+                              <v-btn size="small" class="rounded-xl">Activate</v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-sheet>
+                      </template>
+                    </v-dialog>
                     <v-btn variant="text" icon><v-icon>mdi-account-cancel</v-icon></v-btn>
                     <v-btn variant="text" icon><v-icon>mdi-delete</v-icon></v-btn>
                   </td>
@@ -89,6 +137,7 @@
 
 <script>
 import Nav from "../components/NavBar";
+import service from "../services/userManagement"
 
 export default {
   components: {
@@ -96,6 +145,8 @@ export default {
   },
   data() {
     return {
+      client: [],
+      tenants: [],
       items: [
         { text: "Dashboard", icon: "mdi-view-dashboard", to: "dashboard" },
         {
@@ -157,6 +208,20 @@ export default {
       ]
     };
   },
+  async mounted() {
+    this.getAllTenant();
+  },
+  methods: {
+    async getAllTenant() {
+      const response = await service.getTenants();
+      this.tenants = response.data;      
+    },
+    async showTenant(rc_number){      
+      this.$emit('show-details', rc_number);
+      const response = await service.getTenant(rc_number)
+      this.client = response.data;      
+    }
+  }
 };
 </script>
 <style scoped>

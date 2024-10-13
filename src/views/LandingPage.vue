@@ -10,62 +10,52 @@
           <br />
 
           <a-button class="mt-5 button" @click="dialog = true">Get Started</a-button>
-          <v-dialog v-model="dialog" width="auto">
-            <v-card min-width="400" class="ma-3 pa-3 rounded-lg">
+          <v-dialog v-model="dialog" width="400">
+            
+            <v-card min-width="200" class="ma-3 pa-3 rounded-lg">
+              <a-form >
               <h3>Get Started</h3>
               Company Name
-              <a-input class="mb-3" v-model:value="name" placeholder="Enter Company Name">
+              <a-input class="mb-3" v-model:value="tenant.name" placeholder="Enter Company Name">
                 <template #prefix>
                   <UserOutlined />
                 </template>
               </a-input>
 
               RC Number
-              <a-input class="mb-3" v-model:value="rc_number" placeholder="Enter RC Number">
+              <a-input class="mb-3" v-model:value="tenant.rc_number" placeholder="Enter RC Number">
                 <template #prefix>
                   <FieldNumberOutlined />
                 </template>
               </a-input>
 
               Address
-              <a-input class="mb-3" v-model:value="address" placeholder="Enter Address">
+              <a-input class="mb-3" v-model:value="tenant.address" placeholder="Enter Address">
                 <template #prefix>
                   <AimOutlined />
                 </template>
               </a-input>
               Email:
 
-              <a-input class="mb-3" v-model:value="email" placeholder="Enter email">
+              <a-input class="mb-3" v-model:value="tenant.email" placeholder="Enter email">
                 <template #prefix>
                   <MailOutlined />
                 </template>
-              </a-input>
-              Alternate Email:
-
-              <a-input class="mb-3" v-model:value="alt_email" placeholder="Enter Alternate Email">
-                <template #prefix>
-                  <MailOutlined />
-                </template>
-              </a-input>
+              </a-input>              
               Phone:
 
-              <a-input class="mb-3" v-model:value="phone" placeholder="Enter Phone">
+              <a-input class="mb-3" v-model:value="tenant.phone" placeholder="Enter Phone">
                 <template #prefix>
                   <PhoneOutlined />
                 </template>
               </a-input>
-              Alternate Phone:
-
-              <a-input class="mb-3" v-model:value="alt_phone" placeholder="Enter Alternate Phone">
-                <template #prefix>
-                  <PhoneOutlined />
-                </template>
-              </a-input>
+              
               <a-form-item>
-                <a-button block type="primary" class="login-button" @click="confirm = true">
-                  Continue
+                <a-button block type="primary" class="login-button" @click="register()">
+                  Register
                 </a-button>
               </a-form-item>
+            </a-form>
             </v-card>
           </v-dialog>
 
@@ -132,6 +122,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import {
   PhoneOutlined,
   UserOutlined,
@@ -153,11 +144,16 @@ export default {
   },
   data() {
     return {
-      name: '',
-      phone: '',
-      alt_email: '',
-      alt_phone: '',
-      address: '',
+      tenant: {
+        name: '',
+        address: '',
+        phone: '',
+        email: '',
+        group: '',
+        rc_number: '',
+        alt_email: '',
+        alt_phone: '',
+      },
       loader: false,
       dialog: false,
       email: "",
@@ -199,6 +195,29 @@ export default {
           this.loader = false;
 
         })
+    },
+    async register() {
+      this.loader = true;
+      this.dialog = false;
+      try {
+        const tenant = await axios.post('https://conebackend.onrender.com/api/admin/addclient', {
+          name: this.tenant.name,
+          phone: this.tenant.phone,
+          address: this.tenant.address,
+          email: this.tenant.email,
+          rc_number: this.tenant.rc_number,
+        })
+        if (tenant.status === 201) {
+                    // Redirect the user to the login page after successful registration
+                    this.loader = false;                    
+                    alert('Registration succesful',);
+                } else {
+                    this.loader = false;
+                    alert('Registration failed. Please try again.',);
+                }
+      } catch (err) {
+        console.log(err)
+      }
     }
   },
 };
