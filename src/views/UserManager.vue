@@ -116,7 +116,7 @@
                             </v-card-text>
                             <v-card-actions>
                               <v-spacer/>
-                              <v-btn size="small" class="rounded-xl">Activate</v-btn>
+                              <v-btn size="small" v-bind="activatorProp=false" class="rounded-xl" @click="activate(client.rc_number)">Activate</v-btn>
                             </v-card-actions>
                           </v-card>
                         </v-sheet>
@@ -147,6 +147,7 @@ export default {
     return {
       client: [],
       tenants: [],
+      message: '',
       items: [
         { text: "Dashboard", icon: "mdi-view-dashboard", to: "dashboard" },
         {
@@ -220,6 +221,11 @@ export default {
       this.$emit('show-details', rc_number);
       const response = await service.getTenant(rc_number)
       this.client = response.data;      
+    },
+    async activate(rc_number) {
+      const response = await service.activate(rc_number);
+      console.log(response.data);
+      alert(JSON.stringify(response.data));
     }
   }
 };

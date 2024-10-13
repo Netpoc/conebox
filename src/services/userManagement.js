@@ -9,10 +9,12 @@ const apiClient = axios.create({
 export default {
     //Get All Tenants
     getTenants() {
-        return apiClient.get('tenants')
+        return apiClient.get('tenants');
     },
     getTenant(rc_number) {
-        return apiClient.get(`/tenant?rc_number=${rc_number}`)
+        return apiClient.get(`/tenant?rc_number=${rc_number}`);
+    },
+    activate(rc_number) {
+        return apiClient.put(`/api/admin/activate?rc_number=${rc_number}`);
     }
-    
 }
