@@ -10,12 +10,32 @@ This application is designed for corporates to manage and work on their financia
 - User Roles: Different user roles for accessing and managing data (e.g., Admin, User, Auditor).
 - Error Validation: Automatic checks to ensure data integrity (e.g., zero-sum validation of Trial Balances).
 - API Integration: Integrates with third-party services for data retrieval and reporting.
+
 ### Technologies
 - Frontend Framework: Vue.js
 - State Management: Vuex (if applicable)
 - Spreadsheet Library: Syncfusion Spreadsheet
 - API: RESTful API (if applicable)
 - Storage: LocalStorage for temporary data storage
+
+## Key Functional Areas Implemented
+### User Registration and Onboarding
+
+- Tenant Registration: Tenants can register their companies, input essential details, and choose "group-class-account" if applicable.
+- App-User Registration: App-Users receive registration links to join the system and complete profile setup.
+- Tenant Activation and Deactivation: Tenants can be activated or deactivated by the SaaS Admin as needed.
+- Activation Process: Following registration, both Tenants and App-Users receive confirmation emails to activate their profiles.
+Profile Setup
+
+- Guided Onboarding: New users are guided through platform features on their first login.
+- Profile Configuration: Users can set up profile details like pictures and preferences.
+- Trial Balance Management (App-User)
+
+- Trial Balance Upload: Users can upload trial balances (TB) with zero-sum validation.
+- Edit Capabilities: Each TB entry is editable without leaving the interface.
+
+## Admin Section
+
 
 ## Tenant Section
 ### Adding App_Users

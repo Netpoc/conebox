@@ -56,7 +56,6 @@
       </v-col>
       <v-col class="flex-grow-0 flex-shrink-1" md="7" style="min-width: 100px">
         <v-sheet class="pa-3 ma-3">
-          
           <v-sheet>
             <v-table>
               <thead>
@@ -69,20 +68,22 @@
               </thead>
               <tbody>
                 <tr v-for="item in tenants" :key="item">
-                  <td>{{item.name}}</td>
-                  <td>{{item.rc_number}}</td>
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.rc_number }}</td>
                   <td>
-                    <v-sheet v-if="item.activated === false" class="rounded-xl pa-1 d-flex justify-center" color="warning"><small>Pending Activation</small></v-sheet>
-                    <v-sheet v-else class="rounded-xl pa-1 d-flex justify-center" color="success"><small>Activated</small></v-sheet>
+                    <v-sheet v-if="item.activated === false" class="rounded-xl pa-1 d-flex justify-center"
+                      color="warning"><small>Pending Activation</small></v-sheet>
+                    <v-sheet v-else class="rounded-xl pa-1 d-flex justify-center"
+                      color="success"><small>Activated</small></v-sheet>
                   </td>
                   <td>
                     <v-dialog scrollable>
-                      <template v-slot:activator="{props: activatorProps}">
+                      <template v-slot:activator="{ props: activatorProps }">
                         <v-btn @click="showTenant(item.rc_number)" v-bind="activatorProps" variant="text" icon>
                           <v-icon>mdi-account-check</v-icon>
                         </v-btn>
                       </template>
-                      <template v-slot:default="{isActive}">
+                      <template v-slot:default="{ isActive }">
                         <v-sheet class="pa-4 text-center mx-auto" max-width="600">
                           <v-card>
                             <v-card-title>Complete Registration</v-card-title>
@@ -94,45 +95,68 @@
                                     <th class="text-right">Information</th>
                                   </tr>
                                 </thead>
-                                <tbody v-if="client">
-                                  <tr>
-                                    <td>Name</td>
-                                    <td class="text-right">{{client.name}}</td>
-                                  </tr>
-                                  <tr>
-                                    <td>Email</td>
-                                    <td class="text-right">{{client.email}}</td>
-                                  </tr>
-                                  <tr>
-                                    <td>Phone</td>
-                                    <td class="text-right">{{client.phone}}</td>
-                                  </tr>
-                                  <tr>
-                                    <td>Role</td>
-                                    <td class="text-right">{{client.role}}</td>
-                                  </tr>
-                                </tbody>
-                              </v-table>
-                            </v-card-text>
-                            <v-card-actions>
-                              <v-spacer/>
-                              <v-btn size="small" v-bind="activatorProp=false" class="rounded-xl" @click="activate(client.rc_number)">Activate</v-btn>
-                            </v-card-actions>
-                          </v-card>
-                        </v-sheet>
-                      </template>
-                    </v-dialog>
-                    <v-btn variant="text" icon><v-icon>mdi-account-cancel</v-icon></v-btn>
-                    <v-btn variant="text" icon><v-icon>mdi-delete</v-icon></v-btn>
-                  </td>
+              <tbody v-if="client">
+                <tr>
+                  <td>Name</td>
+                  <td class="text-right">{{ client.name }}</td>
+                </tr>
+                <tr>
+                  <td>Email</td>
+                  <td class="text-right">{{ client.email }}</td>
+                </tr>
+                <tr>
+                  <td>Phone</td>
+                  <td class="text-right">{{ client.phone }}</td>
+                </tr>
+                <tr>
+                  <td>Role</td>
+                  <td class="text-right">{{ client.role }}</td>
                 </tr>
               </tbody>
             </v-table>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn size="small" v-bind="activatorProp = false" class="rounded-xl"
+                @click="activate(client.rc_number)">Activate</v-btn>
+            </v-card-actions>
+            </v-card>
           </v-sheet>
-        </v-sheet>
-      </v-col>
-    </v-row>
-  </v-main>
+</template>
+</v-dialog>
+<!-- Deactivation Button-->
+<v-dialog>
+  <template v-slot:activator="{ props: activatorProps }">
+    <v-btn @click="showTenant(item.rc_number)" v-bind="activatorProps" variant="text" icon>
+      <v-icon>mdi-account-cancel</v-icon>
+    </v-btn>
+  </template>
+  <template v-slot:default="{ isActive }">
+    <v-sheet class="pa-4 text-center mx-auto" max-width="600">
+      <v-card v-if="client">
+        <v-card-title>Deavtivate Tenant</v-card-title>
+        <v-card-text>
+          Are sure you want to deactivate this tenant?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="error" size="small" v-bind="activatorProp = false" class="rounded-xl"
+            @click="deactivate(client.rc_number)">Deactivate</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-sheet>
+  </template>
+</v-dialog>
+<v-btn variant="text" icon><v-icon>mdi-delete</v-icon></v-btn>
+</td>
+</tr>
+</tbody>
+</v-table>
+</v-sheet>
+</v-sheet>
+</v-col>
+</v-row>
+</v-main>
 </template>
 
 <script>
@@ -145,6 +169,7 @@ export default {
   },
   data() {
     return {
+      deactivator: false,
       client: [],
       tenants: [],
       message: '',
@@ -156,7 +181,8 @@ export default {
           to: "user_manager",
         },
         { text: "Reports", icon: "mdi-file-chart", to: "reports" },
-        { text: "Settings", icon: "mdi-cog", to: "settings" },
+        { text: "Settings", icon: "mdi-cog", to: "settings" },        
+        { text: "Logout", icon: "mdi-power-settings", to: "/" },
       ],
       columns: [
         {
@@ -215,17 +241,22 @@ export default {
   methods: {
     async getAllTenant() {
       const response = await service.getTenants();
-      this.tenants = response.data;      
+      this.tenants = response.data;
     },
-    async showTenant(rc_number){      
+    async showTenant(rc_number) {
       this.$emit('show-details', rc_number);
       const response = await service.getTenant(rc_number)
-      this.client = response.data;      
+      this.client = response.data;
     },
     async activate(rc_number) {
       const response = await service.activate(rc_number);
       console.log(response.data);
       alert(JSON.stringify(response.data));
+    },
+    async deactivate(rc_number) {
+      const response = await service.deactivate(rc_number);
+      this.deactivator = false;
+      alert(JSON.stringify(response.data))
     }
   }
 };

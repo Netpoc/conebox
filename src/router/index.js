@@ -54,7 +54,7 @@ const routes = [
     component: Tenant_Dashboard
   },
   {
-    path: '/tenant_register',
+    path: '/tenant_complete_registration',
     name: 'tenant_register',
     component: TenantRegister
   },

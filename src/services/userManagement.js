@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create an Axios instance with default options
 const apiClient = axios.create({
-  baseURL: 'https://conebackend.onrender.com/',
+  baseURL: 'http://localhost:7000/',
 });
 
 
@@ -16,5 +16,9 @@ export default {
     },
     activate(rc_number) {
         return apiClient.put(`/api/admin/activate?rc_number=${rc_number}`);
+    },
+    deactivate(rc_number) {
+        return apiClient.put(`api/admin/deactivate?rc_number=${rc_number}`);
+        
     }
 }

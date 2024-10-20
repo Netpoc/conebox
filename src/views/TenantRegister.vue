@@ -6,10 +6,7 @@
                     <v-card-title class="headline">Complete Your Registration</v-card-title>
                     <v-card-text>
                         <v-form @submit.prevent="submitForm">
-                            <!-- Name -->
-                            <v-text-field v-model="name" label="Company Name" readonly></v-text-field>
-
-                            <!-- Phone Number -->
+                            <!-- Phone Number (pre-filled)-->
                             <v-text-field v-model="phone" label="Phone Number" readonly></v-text-field>
 
                             <!-- Email (pre-filled) -->
@@ -28,10 +25,10 @@
                             <v-checkbox v-model="checked" label="Group Class?"></v-checkbox>
 
                             <!-- Phone Number -->
-                            <v-text-field v-if="checked" v-model="phone" label="Parent Company"></v-text-field>
+                            <v-text-field v-if="checked" v-model="parent" label="Parent Company"></v-text-field>
 
                             <!-- Phone Number -->
-                            <v-text-field v-if="checked" v-model="phone" label="What % is owned by Parent Company?"></v-text-field>
+                            <v-text-field v-if="checked" v-model="percent" label="What % is owned by Parent Company?"></v-text-field>
                         </v-form>
                     </v-card-text>
                     <v-card-actions>
@@ -63,12 +60,13 @@ export default {
             password: '',
             verifyPassword: '',
             phone: '',
-            name: ''
+            name: '',
+            percent: '',
+            parent: ''
         };
     },
     created() {
-        // Get query parameters from the URL
-        this.name = this.$route.query.name;
+        // Get query parameters from the URL        
         this.phone = this.$route.query.phone;
         this.rcNumber = this.$route.query.rc_number;
         this.email = this.$route.query.email;
