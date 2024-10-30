@@ -10,7 +10,7 @@ export default createStore({
   plugins: [vuexPersist.plugin],
   state: {
     workbooks: JSON.parse(localStorage.getItem("workbooks")) || [],
-    token: localStorage.getItem('token') || null,
+    token: localStorage.getItem('authToken') || null,
     user: localStorage.getItem('user') || null,
   },
   getters: {

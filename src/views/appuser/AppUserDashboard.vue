@@ -2,6 +2,19 @@
   <Nav />
   <v-main>
     <h1 class="ma-5">Dashboard</h1>
+    <!--Guide Tour Start-->
+    <v-dialog v-model="tourGuide" max-width="500" persistent>      
+        <v-card title="Guide Tour" append-icon="mdi-lightbulb-question">
+          <v-card-text>
+            This guide tour introduces new features
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn size="small" @click="tourGuide=false">Close</v-btn>
+          </v-card-actions>
+        </v-card>      
+    </v-dialog>
+    <!--Guide Tour Ends-->
     <v-row class="flex-nowrap bg-grey-lighten-4 rounded-xl pa-5 ma-5" no-gutters>
       <v-col class="flex-grow-0 flex-shrink-0" cols="2">
         <SideBar />
@@ -173,6 +186,7 @@ export default {
   },
   data() {
     return {
+      tourGuide: false,
       openSpreadsheet: false,
       template: false,
       trialbalance: [],
@@ -259,13 +273,20 @@ export default {
     }
   },
   mounted() {
-
+    this.tour();
   },
   computed: {
     ...mapGetters(['allWorkbooks']),
 
   },
   methods: {
+    tour(){
+      const check = this.$store.state.user;
+      if(check.firstLogin){
+        this.tourGuide = true;
+      }
+      console.log('Login check payload', check.firstLogin)
+    },
     ...mapActions(['deleteWorkbook']),
     openWorkbook(index) {
       const selectedWorkbook = this.allWorkbooks[index];

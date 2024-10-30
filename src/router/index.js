@@ -17,6 +17,7 @@ import Mapping from '../views/appuser/MappingView.vue'
 import FsDesigner from '@/views/appuser/FsDesigner.vue'
 import Register from '@/views/AppUserRegister.vue'
 import TenantRegister from '@/views/TenantRegister.vue'
+import store from '@/store'
 
 const routes = [
   {
@@ -27,17 +28,20 @@ const routes = [
   {
     path: '/user_manager',
     name: 'user_manager',
-    component: UserManager
+    component: UserManager,
+    meta: { requiresAuth: true}
   },
   {
     path: '/settings',
     name: 'settings',
-    component: Settings
+    component: Settings,
+    meta: { requiresAuth: true}
   },
   {
     path: '/reports',
     name: 'reports',
-    component: Reports
+    component: Reports,
+    meta: { requiresAuth: true}
   },
   {
     path: '/dashboard',
@@ -45,13 +49,15 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/DashboardView.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/DashboardView.vue'),
+    meta: { requiresAuth: true}
   },
   //Tenant Routes
   {
     path: '/tenant_dashboard',
     name: 'tenant_dashboard',
-    component: Tenant_Dashboard
+    component: Tenant_Dashboard,
+    meta: { requiresAuth: true}
   },
   {
     path: '/tenant_complete_registration',
@@ -61,7 +67,8 @@ const routes = [
   {
     path: '/subsidiary_page',
     name: 'subsidiary_page',
-    component: Subsidiary_Page
+    component: Subsidiary_Page,
+    meta: { requiresAuth: true}
   },
   {
     path: '/app_user',
@@ -71,23 +78,27 @@ const routes = [
   {
     path: '/tenant_setting',
     name: 'tenant_setting',
-    component: Tenant_Setting
+    component: Tenant_Setting,
+    meta: { requiresAuth: true}
   },
   //App User Routes
   {
     path: '/register',
     name: 'AppUserRegister',
-    component: Register
+    component: Register,
+    meta: { requiresAuth: true}
   },
   {
     path: '/app_user_dashboard',
     name: 'appUserDashboard',
-    component: AppUserDashboard
+    component: AppUserDashboard,
+    meta: { requiresAuth: true}
   },
   {
     path: '/trial_balance',
     name: 'TrialBalance',
-    component: TrialBalance
+    component: TrialBalance,
+    meta: { requiresAuth: true}
   },
   {
     path: '/chart_of_account',
@@ -102,12 +113,14 @@ const routes = [
   {
     path: '/journal',
     name: 'Journal',
-    component: Journal
+    component: Journal,
+    meta: { requiresAuth: true}
   },
   {
     path: '/mapping',
     name: 'mapping',
-    component: Mapping
+    component: Mapping,
+    meta: { requiresAuth: true}
   },
   {
     path: '/fsdesigner',
@@ -119,6 +132,12 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+router.beforeEach(async (to, from, next) => {
+  if (to.name != 'home' && !store.state.token)
+    next({name: 'home'})
+  else next();
 })
 
 export default router

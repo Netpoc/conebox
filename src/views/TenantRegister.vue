@@ -35,9 +35,9 @@
                         <v-spacer />
                         <v-snackbar :timeout="5000">
                             <template v-slot:activator="{ props }">
-                                <v-btn @click="submitForm" class="ma-2 button" v-bind="props">Submit</v-btn>
+                                <v-btn @click="submitForm" class="ma-2 button" >Submit</v-btn>
                             </template>
-                            <p v-if="success=true">App User Created Successfully!</p>
+                            <v-alert v-if="success=true">App User Created Successfully!</v-alert>
                         </v-snackbar>
                     </v-card-actions>
                 </v-card>
@@ -80,22 +80,23 @@ export default {
             this.loader = true
             try {
                 // Send the data to the backend for saving
-                const response = await axios.post('https://conebackend.onrender.com/api/tenant/register', {
-                    name: this.name,
-                    password: this.password,
-                    email: this.email,
+                const response = await axios.put('https://conebackend.onrender.com/api/tenant/update-profile', {
+                    password: this.password,                    
                     rc_number: this.rcNumber,
-                    phone: this.phone
+                    group: this.checked,
+                    parent: this.parent,
+                    percent: this.percent
                 })
-
-                if (response.status === 201) {
+                if (response.status === 200) {
                     // Redirect the user to the login page after successful registration
                     this.success = true;                    
+                    alert('Profile update successful, loogin with your email and password',);
+                } 
+                this.loader = false;
                     this.$router.push('/');
-                } else {
                     this.loader = false;
-                    alert('Registration failed. Please try again.',);
-                }
+                    
+                
             } catch (error) {               
                 console.log(error) 
                 alert('An error occurred. Please try again.');

@@ -2,6 +2,17 @@
   <Nav />
   <v-main>
     <h1 class="ma-5">Tenant Dashboard</h1>
+    <v-dialog v-model="onboardingTip" max-width="500" persistent>      
+        <v-card title="Guide Tour" append-icon="mdi-lightbulb-question">
+          <v-card-text>
+            This guide tour introduces new features
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn size="small" @click="onboardingTip=false">Close</v-btn>
+          </v-card-actions>
+        </v-card>      
+    </v-dialog>
     <v-row
       class="flex-nowrap bg-grey-lighten-4 rounded-xl pa-5 ma-5"
       no-gutters
@@ -150,8 +161,20 @@ export default {
   },
   data() {
     return {
-        
+        onboardingTip: false,
     };
+  },
+  mounted(){
+    this.checkFirstLogin();
+  },
+  methods:{
+    checkFirstLogin(){
+      const check = this.$store.state.user;
+      if(check.firstLogin){
+        this.onboardingTip = true;
+      }
+      console.log('Login check payload', check.firstLogin)
+    }
   },
   computed: {
     myStyles () {

@@ -176,7 +176,7 @@ export default {
       const rc_number = data.user.rc_number;
       console.log(rc_number);
       try {
-        const response = await axios.post('https://conebackend.onrender.com/api/tenant/send-link', {
+        const response = await axios.post('https://conebackend.onrender.com/api/tenant/adduser', {
           email: this.email,
           rc_number: rc_number
         }, {
@@ -192,7 +192,7 @@ export default {
         }
       } catch (err) {
         this.errorMessage = err.message;
-        console.log(err.message)
+        console.log(err)
       }
     },
     initialize() {

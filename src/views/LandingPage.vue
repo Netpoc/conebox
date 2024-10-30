@@ -177,6 +177,9 @@ export default {
           if (user.role === 'Tenant') {
             this.$router.push("/tenant_dashboard");
             this.loader = false;
+            if(user.firstLogin === 'true') {
+              this.firstTips = true;
+            }
           } else if (user.role === 'Admin') {
             this.$router.push("/dashboard");
             this.loader = false;
