@@ -3,16 +3,23 @@
   <v-main>
     <h1 class="ma-5">Dashboard</h1>
     <!--Guide Tour Start-->
-    <v-dialog v-model="tourGuide" max-width="500" persistent>      
-        <v-card title="Guide Tour" append-icon="mdi-lightbulb-question">
-          <v-card-text>
-            This guide tour introduces new features
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn size="small" @click="tourGuide=false">Close</v-btn>
-          </v-card-actions>
-        </v-card>      
+    <v-dialog v-model="tourGuide" max-width="500" persistent>
+      <v-stepper :items="menus" show-actions>
+       <template v-slot:item.1>
+        <h3>New Features</h3>
+        <p>This guide tour introduces new features</p>
+       </template>
+       <template v-slot:item.2>
+        <v-card class="pa-2">
+          <div>
+            <h3>Complete Profile</h3>
+          <v-btn size="small" @click="tourGuide = false">Close</v-btn>
+          </div>          
+        </v-card>
+       </template>
+       
+      </v-stepper>
+      
     </v-dialog>
     <!--Guide Tour Ends-->
     <v-row class="flex-nowrap bg-grey-lighten-4 rounded-xl pa-5 ma-5" no-gutters>
@@ -186,6 +193,10 @@ export default {
   },
   data() {
     return {
+      menus: [
+        'New Feature Tour',
+        'Complete Profile'
+      ],
       tourGuide: false,
       openSpreadsheet: false,
       template: false,
@@ -280,9 +291,9 @@ export default {
 
   },
   methods: {
-    tour(){
+    tour() {
       const check = this.$store.state.user;
-      if(check.firstLogin){
+      if (check.firstLogin) {
         this.tourGuide = true;
       }
       console.log('Login check payload', check.firstLogin)

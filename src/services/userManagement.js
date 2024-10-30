@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create an Axios instance with default options
 const apiClient = axios.create({
-  baseURL: 'http://localhost:7000/',
+  baseURL: 'https://conebackend.onrender.com/',
 });
 
 
