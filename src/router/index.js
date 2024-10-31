@@ -134,10 +134,6 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach(async (to, from, next) => {
-  if (to.name != 'home' && !store.state.token)
-    next({name: 'home'})
-  else next();
-})
+
 
 export default router
