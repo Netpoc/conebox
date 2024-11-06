@@ -11,51 +11,51 @@
 
           <a-button class="mt-5 button" @click="dialog = true">Get Started</a-button>
           <v-dialog v-model="dialog" width="400">
-            
+
             <v-card min-width="200" class="ma-3 pa-3 rounded-lg">
-              <a-form >
-              <h3>Get Started</h3>
-              Company Name
-              <a-input class="mb-3" v-model:value="tenant.name" placeholder="Enter Company Name">
-                <template #prefix>
-                  <UserOutlined />
-                </template>
-              </a-input>
+              <a-form>
+                <h3>Get Started</h3>
+                Company Name
+                <a-input class="mb-3" v-model:value="tenant.name" placeholder="Enter Company Name">
+                  <template #prefix>
+                    <UserOutlined />
+                  </template>
+                </a-input>
 
-              RC Number
-              <a-input class="mb-3" v-model:value="tenant.rc_number" placeholder="Enter RC Number">
-                <template #prefix>
-                  <FieldNumberOutlined />
-                </template>
-              </a-input>
+                RC Number
+                <a-input class="mb-3" v-model:value="tenant.rc_number" placeholder="Enter RC Number">
+                  <template #prefix>
+                    <FieldNumberOutlined />
+                  </template>
+                </a-input>
 
-              Address
-              <a-input class="mb-3" v-model:value="tenant.address" placeholder="Enter Address">
-                <template #prefix>
-                  <AimOutlined />
-                </template>
-              </a-input>
-              Email:
+                Address
+                <a-input class="mb-3" v-model:value="tenant.address" placeholder="Enter Address">
+                  <template #prefix>
+                    <AimOutlined />
+                  </template>
+                </a-input>
+                Email:
 
-              <a-input class="mb-3" v-model:value="tenant.email" placeholder="Enter email">
-                <template #prefix>
-                  <MailOutlined />
-                </template>
-              </a-input>              
-              Phone:
+                <a-input class="mb-3" v-model:value="tenant.email" placeholder="Enter email">
+                  <template #prefix>
+                    <MailOutlined />
+                  </template>
+                </a-input>
+                Phone:
 
-              <a-input class="mb-3" v-model:value="tenant.phone" placeholder="Enter Phone">
-                <template #prefix>
-                  <PhoneOutlined />
-                </template>
-              </a-input>
-              
-              <a-form-item>
-                <a-button block type="primary" class="login-button" @click="register()">
-                  Register
-                </a-button>
-              </a-form-item>
-            </a-form>
+                <a-input class="mb-3" v-model:value="tenant.phone" placeholder="Enter Phone">
+                  <template #prefix>
+                    <PhoneOutlined />
+                  </template>
+                </a-input>
+
+                <a-form-item>
+                  <a-button block type="primary" class="login-button" @click="register()">
+                    Register
+                  </a-button>
+                </a-form-item>
+              </a-form>
             </v-card>
           </v-dialog>
 
@@ -118,6 +118,9 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-snackbar :color="color" v-model="snackbar" :timeout="timeout">
+      {{ text }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -154,6 +157,10 @@ export default {
         alt_email: '',
         alt_phone: '',
       },
+      color: '',
+      text: '',
+      snackbar: false,
+      timeout: 5000,
       loader: false,
       dialog: false,
       email: "",
@@ -177,7 +184,7 @@ export default {
           if (user.role === 'Tenant') {
             this.$router.push("/tenant_dashboard");
             this.loader = false;
-            if(user.firstLogin === 'true') {
+            if (user.firstLogin === 'true') {
               this.firstTips = true;
             }
           } else if (user.role === 'Admin') {
@@ -211,15 +218,19 @@ export default {
           rc_number: this.tenant.rc_number,
         })
         if (tenant.status === 201) {
-                    // Redirect the user to the login page after successful registration
-                    this.loader = false;                    
-                    alert('Registration succesful',);
-                } else {
-                    this.loader = false;
-                    alert('Registration failed. Please try again.',);
-                }
+          // Redirect the user to the login page after successful registration
+          this.loader = false;
+          this.text = tenant.data;
+          this.snackbar = true;
+          this.color = 'success'
+        }
       } catch (err) {
-        console.log(err)
+        this.loader = false;
+        console.error(err)
+        this.text = err.response.data;
+        this.snackbar = true;
+        this.color = 'error'
+
       }
     }
   },

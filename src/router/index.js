@@ -17,7 +17,6 @@ import Mapping from '../views/appuser/MappingView.vue'
 import FsDesigner from '@/views/appuser/FsDesigner.vue'
 import Register from '@/views/AppUserRegister.vue'
 import TenantRegister from '@/views/TenantRegister.vue'
-import store from '@/store'
 
 const routes = [
   {
