@@ -65,7 +65,7 @@ export default createStore({
     deleteWorkbook({ commit }, index) {
       commit("DELETE_WORKBOOK", index);
     },
-    openWorkbook(state, workbook ) {
+    openWorkbook(state) {
       state.workbooks      
     },
     logout({ commit }) {      

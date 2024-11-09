@@ -21,28 +21,27 @@
                             <!-- Verify Password -->
                             <v-text-field v-model="verifyPassword" label="Verify Password" type="password"
                                 required></v-text-field>
-                                
+
                             <v-checkbox v-model="checked" label="Group Class?"></v-checkbox>
 
                             <!-- Phone Number -->
                             <v-text-field v-if="checked" v-model="parent" label="Parent Company"></v-text-field>
 
                             <!-- Phone Number -->
-                            <v-text-field v-if="checked" v-model="percent" label="What % is owned by Parent Company?"></v-text-field>
+                            <v-text-field v-if="checked" v-model="percent"
+                                label="What % is owned by Parent Company?"></v-text-field>
                         </v-form>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer />
-                        <v-snackbar :timeout="5000">
-                            <template v-slot:activator="{ props }">
-                                <v-btn @click="submitForm" class="ma-2 button" >Submit</v-btn>
-                            </template>
-                            <v-alert v-if="success=true">App User Created Successfully!</v-alert>
-                        </v-snackbar>
+                        <v-btn @click="submitForm" class="ma-2 button">Submit</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
         </v-row>
+        <v-snackbar :timeout="timeout" :color="color" v-model="snackbar">
+            {{ text }}
+        </v-snackbar>
     </v-container>
 </template>
 
@@ -52,6 +51,10 @@ import axios from 'axios';
 export default {
     data() {
         return {
+            snackbar: false,
+            text: '',
+            timeout: 3000,
+            color: '',
             checked: false,
             success: false,
             loader: false,
@@ -81,7 +84,7 @@ export default {
             try {
                 // Send the data to the backend for saving
                 const response = await axios.put('https://conebackend.onrender.com/api/tenant/update-profile', {
-                    password: this.password,                    
+                    password: this.password,
                     rc_number: this.rcNumber,
                     group: this.checked,
                     parent: this.parent,
@@ -89,17 +92,21 @@ export default {
                 })
                 if (response.status === 200) {
                     // Redirect the user to the login page after successful registration
-                    this.success = true;                    
-                    alert('Profile update successful, loogin with your email and password',);
-                } 
+                    this.success = true;
+                    this.text = 'Account activation successful, you will be redirected to the login page shortly.';
+                    this.snackbar = true;
+                    this.color = 'success'
+                }
                 this.loader = false;
-                    this.$router.push('/');
-                    this.loader = false;
-                    
-                
-            } catch (error) {               
-                console.log(error) 
-                alert('An error occurred. Please try again.');
+                this.$router.push('/');                
+
+            } catch (error) {
+                this.loader = false;
+                this.text = 'An error occured, please try later or contact admin';
+                this.snackbar = true;
+                this.color = 'error'
+                console.log(error)
+
             }
         }
     }
