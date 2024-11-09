@@ -82,7 +82,7 @@ const routes = [
   },
   //App User Routes
   {
-    path: '/register',
+    path: '/appuser_register',
     name: 'AppUserRegister',
     component: Register,
     meta: { requiresAuth: true}

@@ -3,7 +3,7 @@
         <v-row justify="center" align="center">
             <v-col cols="12" sm="8" md="6">
                 <v-card>
-                    <v-card-title class="headline">Complete Your Registration</v-card-title>
+                    <v-card-title class="headline">Complete App User Registration</v-card-title>
                     <v-card-text>
                         <v-form @submit.prevent="submitForm">
                             <!-- Name -->
@@ -28,15 +28,15 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer />
-                        <v-snackbar :timeout="timeout" :color="color" v-model="snackbar">
-                            <template v-slot:activator="{ props }">
-                                <v-btn @click="submitForm" class="ma-2 button" v-bind="props">Submit</v-btn>
-                            </template>
-                            <p v-if="success = true">App User Created Successfully!</p>
-                        </v-snackbar>
+                        <template v-slot:activator="{ props }">
+                            <v-btn @click="submitForm" class="ma-2 button" v-bind="props">Submit</v-btn>
+                        </template>
                     </v-card-actions>
                 </v-card>
             </v-col>
+            <v-snackbar :timeout="timeout" :color="color" v-model="snackbar">
+                {{ text }}
+            </v-snackbar>
         </v-row>
     </v-container>
 </template>
@@ -93,8 +93,8 @@ export default {
             } catch (error) {
                 this.text = 'An error occured, please try later or contact admin';
                 this.snackbar = true;
-                this.color = 'error'                
-                console.log(error);                
+                this.color = 'error'
+                console.log(error);
             }
         }
     }
