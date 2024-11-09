@@ -28,11 +28,11 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer />
-                        <v-snackbar :timeout="5000">
+                        <v-snackbar :timeout="timeout" :color="color" v-model="snackbar">
                             <template v-slot:activator="{ props }">
                                 <v-btn @click="submitForm" class="ma-2 button" v-bind="props">Submit</v-btn>
                             </template>
-                            <p v-if="success=true">App User Created Successfully!</p>
+                            <p v-if="success = true">App User Created Successfully!</p>
                         </v-snackbar>
                     </v-card-actions>
                 </v-card>
@@ -47,6 +47,10 @@ import axios from 'axios';
 export default {
     data() {
         return {
+            snackbar: 'false',
+            text: '',
+            color: '',
+            timeout: 3000,
             success: false,
             loader: false,
             email: '',
@@ -78,18 +82,19 @@ export default {
                     rc_number: this.rcNumber,
                     phone: this.phone
                 })
-
                 if (response.status === 201) {
                     // Redirect the user to the login page after successful registration
-                    this.success = true;                    
+                    this.text = 'Account activation successful, you will be redirected to the login page.';
+                    this.snackbar = true;
+                    this.color = 'success'
+                    this.success = true;
                     this.$router.push('/');
-                } else {
-                    this.loader = false;
-                    alert('Registration failed. Please try again.',);
                 }
-            } catch (error) {               
-                console.log(error) 
-                alert('An error occurred. Please try again.');
+            } catch (error) {
+                this.text = 'An error occured, please try later or contact admin';
+                this.snackbar = true;
+                this.color = 'error'                
+                console.log(error);                
             }
         }
     }

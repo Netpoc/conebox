@@ -78,88 +78,107 @@
                   </td>
                   <td>
                     <!--Activation Dialog Start-->
-                    <v-dialog v-model="activationDialog" max-width="400" persistent scrollable>
+                    <v-dialog v-model="activationDialog" max-width="450" persistent scrollable>
                       <template v-slot:activator="{ props: activatorProps }">
                         <v-btn @click="showTenant(item.rc_number)" v-bind="activatorProps" variant="text" icon>
                           <v-icon>mdi-account-check</v-icon>
                         </v-btn>
                       </template>
-                      <template v-slot:default="{ isActive }">                        
-                          <v-card class="pa-3 rounded-xl" title="Activate Tenant" append-icon="mdi-account">                            
-                            <v-card-text>
-                              <v-table>
-                                <thead>
-                                  <tr>
-                                    <th>Biodata</th>
-                                    <th class="text-right">Information</th>
-                                  </tr>
-                                </thead>
-                                <tbody v-if="client">
-                                  <tr>
-                                    <td>Name</td>
-                                    <td class="text-right">{{ client.name }}</td>
-                                  </tr>
-                                  <tr>
-                                    <td>Email</td>
-                                    <td class="text-right">{{ client.email }}</td>
-                                  </tr>
-                                  <tr>
-                                    <td>Phone</td>
-                                    <td class="text-right">{{ client.phone }}</td>
-                                  </tr>
-                                  <tr>
-                                    <td>Role</td>
-                                    <td class="text-right">{{ client.role }}</td>
-                                  </tr>
-                                </tbody>
+                      <template v-slot:default="{ isActive }">
+                        <v-card class="ma-2 rounded-xl" title="Activate Tenant" append-icon="mdi-account">
+                          <v-card-text>
+                            <v-table>
+                              <thead>
+                                <tr>
+                                  <th>Biodata</th>
+                                  <th class="text-right">Information</th>
+                                </tr>
+                              </thead>
+              <tbody v-if="client">
+                <tr>
+                  <td>Name</td>
+                  <td class="text-right">{{ client.name }}</td>
+                </tr>
+                <tr>
+                  <td>Email</td>
+                  <td class="text-right">{{ client.email }}</td>
+                </tr>
+                <tr>
+                  <td>Phone</td>
+                  <td class="text-right">{{ client.phone }}</td>
+                </tr>
+                <tr>
+                  <td>Role</td>
+                  <td class="text-right">{{ client.role }}</td>
+                </tr>
+              </tbody>
             </v-table>
             </v-card-text>
             <v-card-actions>
               <v-spacer />
-              <v-btn @click="activationDialog = false" size="small" class="pa-2 rounded-xl">Cancel</v-btn>
-              <v-btn size="small" v-bind="activatorProp = false" class="pa-2 rounded-xl"
-                @click="activate(client.rc_number)">Activate</v-btn>
+              <v-btn @click="isActive.value = false" size="small" class="pa-2 rounded-xl">Cancel</v-btn>
+              <v-btn size="small" class="pa-2 rounded-xl" @click="activate(client.rc_number)">Activate</v-btn>
             </v-card-actions>
-            </v-card>          
+            </v-card>
 </template>
-                    </v-dialog>
-                    <!--Activation Dialog Ends-->
-                    <!-- Deactivation Dialog Starts-->
-                    <v-dialog v-model="deactivationDialog" max-width="400">
-                      <template v-slot:activator="{ props: activatorProps }">
-                        <v-btn @click="showTenant(item.rc_number)" v-bind="activatorProps" variant="text" icon>
-                          <v-icon>mdi-account-cancel</v-icon>
-                        </v-btn>
-                      </template>
-                      <template v-slot:default="{ isActive }">    
-                          <v-card class="pa-3 rounded-xl" v-if="client" title="Deavtivate Tenant" append-icon="mdi-account-cancel">        
-                            <v-card-text>
-                              Are sure you want to deactivate this tenant?
-                            </v-card-text>
-                            <v-card-actions>
-                              <v-spacer />
-                              <v-btn size="small" @click="deactivationDialog = false" class="pa-2 rounded-xl">Cancel</v-btn>
-                              <v-btn color="error" size="small" v-bind="activatorProp = false" class="pa-2 rounded-xl"
-                                @click="deactivate(client.rc_number)">Deactivate</v-btn>
-                            </v-card-actions>
-                          </v-card>
-                        
-                      </template>
-                    </v-dialog>
-                    <!-- Deactivation Dialog Ends-->
-                  <v-btn variant="text" icon><v-icon>mdi-delete</v-icon></v-btn>
-                  </td>
-                </tr>
-              </tbody>
-            </v-table>
-          </v-sheet>
-        </v-sheet>
-      </v-col>
-    </v-row>
-    <v-snackbar :color="color" v-model="snackbar" :timeout="timeout">
-      {{ text }}
-    </v-snackbar>
-  </v-main>
+</v-dialog>
+<!--Activation Dialog Ends-->
+<!-- Deactivation Dialog Starts-->
+<v-dialog v-model="deactivationDialog" max-width="400" persistent scrollable>
+  <template v-slot:activator="{ props: activatorProps }">
+    <v-btn @click="showTenant(item.rc_number)" v-bind="activatorProps" variant="text" icon>
+      <v-icon>mdi-account-cancel</v-icon>
+    </v-btn>
+  </template>
+  <template v-slot:default="{ isActive }">
+    <v-card class="pa-2 rounded-xl" v-if="client" title="Deavtivate Tenant" append-icon="mdi-account-cancel">
+      <v-card-text>
+        Are sure you want to deactivate this tenant?
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn size="small" @click="isActive.value = false" class="pa-2 rounded-xl">Cancel</v-btn>
+        <v-btn color="error" size="small" class="pa-2 rounded-xl"
+          @click="deactivate(client.rc_number)">Deactivate</v-btn>
+      </v-card-actions>
+    </v-card>
+
+  </template>
+</v-dialog>
+<!-- Deactivation Dialog Ends-->
+<!--Tenant Delete Dialog Starts-->
+<v-dialog v-modle="deleteDialog" scrollable max-width="400">
+  <template v-slot:activator="{ props: activatorProps }">
+    <v-btn v-bind="activatorProps" variant="text" icon>
+      <v-icon>mdi-delete</v-icon>
+    </v-btn>
+  </template>
+  <template v-slot:default="{ isActive }">
+    <v-card class="ma-2 rounded-xl">
+      <v-card-title>
+        Confirm Delete
+      </v-card-title>
+      <v-card-text>Are you sure you want to delete <strong>{{ item.name }}</strong>?</v-card-text>
+      <v-card-actions>
+        <v-btn size="small" class="rounded-xl" @click="isActive.value = false">No</v-btn>
+        <v-btn size="small" class="rounded-xl" @click="deleteClient(item.rc_number), isActive.value = false">Yes</v-btn>
+      </v-card-actions>
+    </v-card>
+  </template>
+</v-dialog>
+
+</td>
+</tr>
+</tbody>
+</v-table>
+</v-sheet>
+</v-sheet>
+</v-col>
+</v-row>
+<v-snackbar :color="color" v-model="snackbar" :timeout="timeout">
+  {{ text }}
+</v-snackbar>
+</v-main>
 </template>
 
 <script>
@@ -172,6 +191,7 @@ export default {
   },
   data() {
     return {
+      deleteDialog: false,
       color: '',
       snackbar: false,
       text: '',
@@ -260,30 +280,44 @@ export default {
     async activate(rc_number) {
       try {
         const response = await service.activate(rc_number);
-        this.activationDialog = false;      
-        this.text = response.data;      
+        this.activationDialog = false;
+        this.text = response.data;
         this.snackbar = true;
         this.color = 'success'
-      } catch (error) {        
-        this.activationDialog = false;      
-        this.text = error.data;      
+      } catch (error) {
+        this.activationDialog = false;
+        this.text = error.data;
         this.snackbar = true;
         this.color = 'error'
         console.log(error)
       }
-      
+    },
+    async deleteClient(rc_number) {
+      this.deleteDialog = false;
+      try {
+        const response = await service.deleteClient(rc_number);
+        this.text = response.data;
+        this.snackbar = true;
+        this.color = 'success';        
+      } catch (error) {
+        this.text = error.data;
+        this.snackbar = true;
+        this.color = 'error'
+        console.log(error)
+      }
     },
     async deactivate(rc_number) {
       try {
+        this.deleteDialog = false
         const response = await service.deactivate(rc_number);
-        this.deactivator = false;      
-        this.deactivationDialog = false;      
-        this.text = response.data;      
+        this.deactivator = false;
+        this.deactivationDialog = false;
+        this.text = response.data;
         this.snackbar = true;
-      this.color = 'success'
+        this.color = 'success'
       } catch (error) {
-        this.deactivationDialog = false;      
-        this.text = error.data;      
+        this.deleteDialog = false
+        this.text = error.data;
         this.snackbar = true;
         this.color = 'error'
         console.log(error)

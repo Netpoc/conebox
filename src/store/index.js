@@ -44,7 +44,7 @@ export default createStore({
   actions: {
     async login({ commit }, { email, password }) {
       try {
-        const response = await axios.post(`http://localhost:7000/api/auth/login`, {
+        const response = await axios.post(`https://conebackend.onrender.com/api/auth/login`, {
           email,
           password
         });
