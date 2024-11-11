@@ -3,7 +3,7 @@
         <v-row justify="center" align="center">
             <v-col cols="12" sm="8" md="6">
                 <v-card>
-                    <v-card-title class="headline">Complete App User Registration</v-card-title>
+                    <v-card-title class="pa-5 headline">Complete App User Registration</v-card-title>
                     <v-card-text>
                         <v-form @submit.prevent="submitForm">
                             <!-- Name -->
@@ -25,15 +25,20 @@
                             <v-text-field v-model="verifyPassword" label="Verify Password" type="password"
                                 required></v-text-field>
                         </v-form>
+                        <v-alert icon="$alert" type="error" class="mt-2" v-if="errorMessage">{{ errorMessage }}</v-alert>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer />
-                        <template v-slot:activator="{ props }">
-                            <v-btn @click="submitForm" class="ma-2 button" v-bind="props">Submit</v-btn>
-                        </template>
+                        <v-btn @click="submitForm" class="ma-2 button" v-bind="props">Submit</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
+            <v-dialog max-width="400" v-model="loader">
+                <v-card class="pa-5 ma-5">
+                    Registering New User...
+                    <v-progress-linear class="mt-3" color="#ffc107" indeterminate></v-progress-linear>
+                </v-card>
+            </v-dialog>
             <v-snackbar :timeout="timeout" :color="color" v-model="snackbar">
                 {{ text }}
             </v-snackbar>
@@ -47,7 +52,8 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            snackbar: 'false',
+            errorMessage: '',
+            snackbar: false,
             text: '',
             color: '',
             timeout: 3000,
@@ -68,9 +74,8 @@ export default {
     },
     methods: {
         async submitForm() {
-            if (this.password !== this.verifyPassword) {
-                alert('Passwords do not match!');
-                return;
+            if (this.password !== this.verifyPassword) {                
+                return this.errorMessage = 'Passwords do not match!';
             }
             this.loader = true
             try {
@@ -95,6 +100,7 @@ export default {
                 this.snackbar = true;
                 this.color = 'error'
                 console.log(error);
+                this.loader = false;
             }
         }
     }

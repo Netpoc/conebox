@@ -4,14 +4,9 @@
     <div class="pa-2 d-flex align-center">
       <h1 class="ma-2">App User</h1>
       <v-btn icon @click="dialog = true"><v-icon>mdi-plus</v-icon></v-btn>
+      <!--Add App User Dialog Starts-->
       <v-dialog v-model="dialog" width="auto">
         <v-card min-width="400" class="ma-3 pa-3 rounded-lg">
-          <a-result v-if="success === true" status="success" title="Email Sent Successfully">
-            <a-button>Close</a-button>
-          </a-result>
-          <a-result v-if="fail === true" status="error" title="Email Sent Successfully">
-            <a-button>Close</a-button>
-          </a-result>
           <a-form :form="form" @submit.prevent="sendLink()" layout="vertical" class="login-form">
             <h3>Add App User</h3>
             Email:
@@ -21,7 +16,7 @@
               </template>
             </a-input>
             <a-form-item>
-              <a-button block html-type="submit" class="button">
+              <a-button block html-type="submit" @click="dialog = false" class="button">
                 Send Invite
               </a-button>
               <v-alert icon="$alert" type="error" class="mt-2" v-if="errorMessage">{{ errorMessage }}</v-alert>
@@ -29,6 +24,7 @@
           </a-form>
         </v-card>
       </v-dialog>
+      <!--Add App User Dialog Ends-->
     </div>
     <v-row class="flex-nowrap bg-grey-lighten-4 rounded-xl pa-5 ma-5" no-gutters>
       <v-col class="flex-grow-0 flex-shrink-0" md="2">
@@ -37,42 +33,50 @@
       <v-col class="flex-grow-1 flex-shrink-0" md="6" style="min-width: 100px; max-width: 100%">
         <v-sheet class="ma-3 rounded-xl">
           <v-table>
-    <thead>
-      <tr>
-        <th class="text-left">
-          Name
-        </th>
-        <th class="text-left">
-          Last Login
-        </th>
-        <th class="text-left">
-          Total Edits
-        </th>
-        <th class="text-left">
-          Actions
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr        
-      >
-        <td>Mathew Makinwa</td>
-        <td>today, 3:29pm</td>
-        <td>14</td>
-        <td>
-          <v-btn icon variant="text"><v-icon>mdi-account-edit-outline</v-icon></v-btn>
-          <v-btn icon variant="text"><v-icon>mdi-open-in-new</v-icon></v-btn>
-          <v-btn icon variant="text"><v-icon>mdi-delete-empty</v-icon></v-btn>
-        </td>
-      </tr>
-    </tbody>
-  </v-table>
+            <thead>
+              <tr>
+                <th class="text-left">
+                  Name
+                </th>
+                <th class="text-left">
+                  Last Login
+                </th>
+                <th class="text-left">
+                  Total Edits
+                </th>
+                <th class="text-left">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Mathew Makinwa</td>
+                <td>today, 3:29pm</td>
+                <td>14</td>
+                <td>
+                  <v-btn icon variant="text"><v-icon>mdi-account-edit-outline</v-icon></v-btn>
+                  <v-btn icon variant="text"><v-icon>mdi-open-in-new</v-icon></v-btn>
+                  <v-btn icon variant="text"><v-icon>mdi-delete-empty</v-icon></v-btn>
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
         </v-sheet>
       </v-col>
       <v-col class="flex-grow-0 flex-shrink-1" md="3" style="min-width: 100px">
 
       </v-col>
     </v-row>
+    <v-dialog max-width="400" v-model="loader">
+      <v-card class="pa-5 ma-5">
+        Sending Email to User...
+        <v-progress-linear class="mt-3" color="#ffc107" indeterminate></v-progress-linear>
+      </v-card>
+    </v-dialog>
+    <v-snackbar :color="color" v-model="snackbar" :timeout="timeout">
+      {{ text }}
+    </v-snackbar>
   </v-main>
 </template>
 <script>
@@ -88,6 +92,11 @@ export default {
   },
   data() {
     return {
+      loader: false,
+      color: '',
+      text: '',
+      snackbar: false,
+      timeout: '',
       errorMessage: '',
       fail: false,
       success: false,
@@ -97,58 +106,6 @@ export default {
       desserts: [],
       item: '',
       editedIndex: -1,
-      desserts: [
-          {
-            name: 'Frozen Yogurt',
-            calories: 159,
-            actions: ''
-          },
-          {
-            name: 'Ice cream sandwich',
-            calories: 237,
-            actions: ''
-          },
-          {
-            name: 'Eclair',
-            calories: 262,
-            actions: ''
-          },
-          {
-            name: 'Cupcake',
-            calories: 305,
-            actions: ''
-          },
-          {
-            name: 'Gingerbread',
-            calories: 356,
-            actions: ''
-          },
-          {
-            name: 'Jelly bean',
-            calories: 375,
-            actions: ''
-          },
-          {
-            name: 'Lollipop',
-            calories: 392,
-            actions: ''
-          },
-          {
-            name: 'Honeycomb',
-            calories: 408,
-            actions: ''
-          },
-          {
-            name: 'Donut',
-            calories: 452,
-            actions: ''
-          },
-          {
-            name: 'KitKat',
-            calories: 518,
-            actions: ''
-          },
-        ],
     };
   },
   computed: {
@@ -171,10 +128,10 @@ export default {
   },
   methods: {
     async sendLink() {
+      this.loader = true;
       const token = localStorage.getItem('authToken');
       const data = JSON.parse(localStorage.getItem('vuex'));
       const rc_number = data.user.rc_number;
-      console.log(rc_number);
       try {
         const response = await axios.post('https://conebackend.onrender.com/api/tenant/adduser', {
           email: this.email,
@@ -186,7 +143,11 @@ export default {
         })
 
         if (response.status === 200) {
-          this.success = true;
+          this.snackbar = true;
+          this.color = "success";
+          this.timeout = 4000;
+          this.loader = false;
+          this.text = "Email invite sent!"
         } else {
           this.fail = true;
         }
