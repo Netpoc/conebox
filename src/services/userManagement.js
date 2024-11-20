@@ -7,6 +7,11 @@ const apiClient = axios.create({
 
 
 export default {
+    //Appuser Save to Database
+    saveAppUser(appUser) {
+        return apiClient.post('/api/appuser/savespreadsheets', appUser);
+    },
+
     //Get All Tenants
     getTenants() {
         return apiClient.get('tenants');

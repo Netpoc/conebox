@@ -1,9 +1,22 @@
 <template>
     <v-card>
-        <v-alert close-label="Validation Alert"
-            text="Unable to save progress due to validation error. Kindly fix issues and try again."
-            title="Validation Error" type="warning" closable variant="tonal" v-show="zeroSumError"></v-alert>
-        <ejs-spreadsheet allowDataValidation="true" height="550px" ref="spreadsheet" :created="created"
+        <v-alert class="pa-5" close-label="Validation Alert" text="Zero sum test failed, Kindly fix error to proceed"
+            title="Zero Sum Error" type="error" closable v-if="zeroSumError"></v-alert>
+        <v-dialog v-model="notification" max-width="400">
+            <v-card>
+                <v-card-title>
+                    Notification
+                </v-card-title>
+                <v-sheet class="pa-3" color="red">
+                    {{ text }}
+                </v-sheet>
+                <v-card-actions>
+                    <v-spacer />
+                    <v-btn @click="this.notification = false">close</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <ejs-spreadsheet allowDataValidation="true" height="500px" ref="spreadsheet" :created="created"
             :openUrl="openUrl" :saveUrl="saveUrl" :beforeSave="onSave">
             <e-sheets>
                 <e-sheet>
@@ -24,23 +37,20 @@
         </ejs-spreadsheet>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn class="ma-2" @click="validateTrialBalance">Validate <v-icon>mdi-file-check-outline</v-icon></v-btn>
-            <v-dialog max-width="400">
-                <template v-slot:activator="{ props: activatorProps }">
-                    <v-btn v-bind="activatorProps"
-                        :disabled="isDisabled">Save<v-icon>mdi-content-save-outline</v-icon></v-btn>
-                </template>
-                <template v-slot:default="{ isActive }">
-                    <v-card>
-                        <v-text-field v-model="documentName" hide-details="auto" label="Document Name:"
-                            placeholder="CP-ID_Q(n)_YYYY"></v-text-field>
-                        <v-card-actions>
-                            <v-spacer />
-                            <v-btn @click="calcSum">Save New</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </template>
+            <v-btn class="ma-2" @click="validateTrialBalance()">Validate <v-icon>mdi-file-check-outline</v-icon></v-btn>
+            <v-btn :disabled="isDisabled" @click="saveSheet()">Save<v-icon>mdi-content-save-outline</v-icon></v-btn>
+            <!--Save Dialog Box Start-->
+            <v-dialog max-width="400" v-model="saveDialog">
+                <v-card>
+                    <v-text-field v-model="documentName" hide-details="auto" label="Document Name:"
+                        placeholder="CP-ID_Q(n)_YYYY"></v-text-field>
+                    <v-card-actions>
+                        <v-spacer />
+                        <v-btn @click="calcSum">Save New</v-btn>
+                    </v-card-actions>
+                </v-card>
             </v-dialog>
+            <!--Save Dialog Box End-->
         </v-card-actions>
 
         <v-dialog v-model="popupLoader" max-width="420" persistent>
@@ -63,11 +73,13 @@
 </template>
 
 <script>
+import api from '../../services/userManagement'
 import { mapActions } from 'vuex';
 import {
     SpreadsheetComponent, SheetsDirective, SheetDirective, RangesDirective,
     RangeDirective, ColumnsDirective, ColumnDirective
 } from '@syncfusion/ej2-vue-spreadsheet';
+
 export default {
     components: {
         'ejs-spreadsheet': SpreadsheetComponent,
@@ -80,6 +92,8 @@ export default {
     },
     data() {
         return {
+            notification: false,
+            text: '',
             spreadsheetData: new Map(),
             documentName: '',
             popupLoader: false,
@@ -109,29 +123,32 @@ export default {
         },
     },
     methods: {
-        created: function() {
+        created: function () {
             this.$refs.spreadsheet.addCustomFunction();
         },
-        findDuplicates(map) {
-            const valueCount = new Map();
-            const duplicates = [];
-            map.forEach((value, key) => {
-                // Convert the value to a JSON string for comparison purposes
-                const stringValue = JSON.stringify(value);
+        async findDuplicates(map) {
+            try {
+                const valueCount = new Map();
+                const duplicates = [];
+                map.forEach((value, key) => {
+                    // Convert the value to a JSON string for comparison purposes
+                    const stringValue = JSON.stringify(value);
 
-                if (valueCount.has(stringValue)) {
-                    valueCount.set(stringValue, valueCount.get(stringValue) + 1);
-                } else {
-                    valueCount.set(stringValue, 1);
-                }
-            });
-            valueCount.forEach((count, value) => {
-                if (count > 1) {
-                    duplicates.push(JSON.parse(value)); // Convert the JSON string back to an object
-                }
-            });
-
-            return duplicates;
+                    if (valueCount.has(stringValue)) {
+                        valueCount.set(stringValue, valueCount.get(stringValue) + 1);
+                    } else {
+                        valueCount.set(stringValue, 1);
+                    }
+                });
+                valueCount.forEach((count, value) => {
+                    if (count > 1) {
+                        duplicates.push(JSON.parse(value)); // Convert the JSON string back to an object
+                    }
+                });
+                return duplicates;
+            } catch (error) {
+                console.log(error);
+            }
         },
         ...mapActions(['addWorkbook']),
         created: function () {
@@ -154,49 +171,89 @@ export default {
                 cFColor: "RedFT",
                 range: "A3:A3000",
             })
+
             return duplicate;
         },
+
+        //Trial Balance Zero Sum Validation
         async validateTrialBalance() {
+            this.isDisabled = true;
             const spreadsheet = this.$refs.spreadsheet;
             try {
                 const duplicate = spreadsheet.conditionalFormat({
                     type: "Duplicate",
                     cFColor: "RedFT",
                     range: "A3:A3000",
-                })
-                const activesheet = spreadsheet.ej2Instances.activeSheetIndex
-                if (activesheet == 0) {
+                }); //Highlight duplicate ledger numbers
 
-                    const sumif = spreadsheet.computeExpression("=SUMIF(JOURNAL!A:A,TRIAL_BALANCE!A3,JOURNAL!C:C)");
-                    console.log('sum if:', sumif);
+                const activesheet = await spreadsheet.ej2Instances.activeSheetIndex; //Get active sheet
+                if (activesheet == 0) {
                     const credit = spreadsheet.computeExpression("=SUM(C3:C3000)");
                     const debit = spreadsheet.computeExpression("=SUM(D3:D3000)");
                     const balance = credit + debit;
                     if (balance === 0) {
-                        spreadsheet.saveAsJson().then((Json) => (this.response = Json));
                         this.isDisabled = false;
-                        console.log('payload sample:', this.response);
-                        this.addWorkbook(this.response);
-
                     } else {
-
-                        this.zeroSumError = 'Failed Zero Sum Check!!!';
-                        console.log('Failed Zero Sum Check!!!');
+                        this.notification = true
+                        this.text = "Zero sum validation failed"
                     }
                 }
                 spreadsheet.getData("TRIAL_BALANCE!A3:A100").then((data) => (this.rangeData = data));
-                const duplicates = this.findDuplicates(this.rangeData)
+                const duplicates = this.findDuplicates(this.rangeData);
+                console.log('Range Data: ', this.rangeData);
                 console.log('Duplicate: ', duplicates);
                 return duplicate
             } catch (err) {
                 console.log('Something went wrong', err)
             }
         },
+
+        //Sort through Spreadsheet Payload
+        async findSheets(data) {
+            try {
+                if (!data || typeof data !== 'object') {
+                return null; // Base case: return null for non-objects
+            }
+
+            // Check if the current object contains the 'sheets' key
+            if (data.hasOwnProperty('sheets')) {
+                return data.sheets; // Base case: found the 'sheets'
+            }
+
+            // Recursively search nested objects
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    const result = this.findSheets(data[key]); // Recursive call
+                    if (result) {
+                        return result; // Return the result if found
+                    }
+                }
+            }
+            return null; // Return null if 'sheets' is not found
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        //Save Spreadsheet Logic
+        async saveSheet() {
+            try {
+                const spreadsheet = this.$refs.spreadsheet;
+                await spreadsheet.saveAsJson().then((Json) => (this.response = Json));
+
+                const sheets = await this.findSheets(this.response);
+                const save = await api.saveAppUser(sheets);
+                console.log('payload sample:', save);
+                this.addWorkbook(this.response);
+            } catch (error) {
+                console.log(error)
+            }
+        },
         async calcSum() {
             try {
                 const spreadsheet = this.$refs.spreadsheet;
                 const activesheet = spreadsheet.ej2Instances.activeSheetIndex
-                console.log('active sheet:', activesheet);
+
                 if (activesheet == 0) {
                     const credit = spreadsheet.computeExpression("=SUM(C3:C3000)");
                     const debit = spreadsheet.computeExpression("=SUM(D3:D3000)");

@@ -4,26 +4,22 @@
     <h1 class="ma-5">Dashboard</h1>
     <!--Guide Tour Start-->
     <v-dialog v-model="tourGuide" max-width="500" persistent>
-      <v-stepper :items="menus" show-actions>
-       <template v-slot:item.1>
-        <h3>New Features</h3>
-        <p>This guide tour introduces new features</p>
-       </template>
-       <template v-slot:item.2>
-        <v-card class="pa-2">
-          <div>
-            <h3>Complete Profile</h3>
-          <v-btn size="small" @click="tourGuide = false">Close</v-btn>
-          </div>          
-        </v-card>
-       </template>
-       
-      </v-stepper>
-      
+      <v-card>
+        <v-card-title>Guide Tour</v-card-title>
+        <v-card-text>
+          This guide tour introduces new features
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn size="small" @click="tourGuide=false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+            
     </v-dialog>
     <!--Guide Tour Ends-->
     <v-row class="flex-nowrap bg-grey-lighten-4 rounded-xl pa-5 ma-5" no-gutters>
       <v-col class="flex-grow-0 flex-shrink-0" cols="2">
+      <!--Side Bar-->
         <SideBar />
       </v-col>
       <v-col md="6">
@@ -31,11 +27,9 @@
           <h3>Quick Tasks</h3>
           <v-card class="ma-3">
             <v-card-title>
-              Start New FY
+              Prepare Trial Balance
             </v-card-title>
-            <v-card-text>
-
-            </v-card-text>
+            
             <v-card-actions>
               <v-spacer />
               <v-menu>
@@ -50,11 +44,11 @@
                       </v-list-item>
                     </template>
                     <template v-slot:default="{ isActive }">
-                      <v-card>
+                      <v-card max-height="400">
                         <v-toolbar>
                           <v-btn icon="mdi-close" @click="template = false"></v-btn>
 
-                          <v-toolbar-title>Template FY</v-toolbar-title>
+                          <v-toolbar-title>Template Combined Financial Year</v-toolbar-title>
 
                           <v-spacer></v-spacer>
 
@@ -67,41 +61,13 @@
                         </v-card-text>
                       </v-card>
                     </template>
-                  </v-dialog>
-                  <v-list-item link>
-                    Upload
-                  </v-list-item>
+                  </v-dialog>                  
                 </v-list>
               </v-menu>
 
             </v-card-actions>
           </v-card>
-          <v-table height="300px">
-            <thead>
-              <tr>
-                <th class="text-left">
-                  Financial Year
-                </th>
-                <th class="text-left">
-                  Date Last Edited
-                </th>
-                <th class="text-left">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in desserts" :key="item.name">
-                <td>{{ item.name }}</td>
-                <td>{{ item.date }}</td>
-                <td>
-                  <v-btn variant="text">
-                    <v-icon>mdi-microsoft-excel</v-icon>
-                  </v-btn>
-                </td>
-              </tr>
-            </tbody>
-          </v-table>
+          
         </v-card>
       </v-col>
       <v-col md="4">
@@ -110,8 +76,8 @@
             Recent Work
           </v-card-title>
           <v-card-text>
-            <ul>
-              <li v-for="(workbook, index) in allWorkbooks" :key="index">
+            <v-list>
+              <v-list-item v-for="(workbook, index) in allWorkbooks" :key="index">
                 Workbook {{ index + 1 }}
                 <v-btn @click="deleteWorkbook(index)">Delete</v-btn>
                 <v-dialog v-model="openSpreadsheet">
@@ -154,8 +120,14 @@
                   </template>
                 </v-dialog>
 
-              </li>
-            </ul>
+              </v-list-item>
+            </v-list>
+            <div>
+              here
+            </div>
+            <div v-if="allWorkbooks.sheets">
+              hi
+            </div>
           </v-card-text>
         </v-card>
       </v-col>
@@ -169,6 +141,7 @@
 </template>
 
 <script>
+
 import { SpreadsheetComponent, SheetDirective, RowsDirective, RowDirective, SheetsDirective, ColumnsDirective, ColumnDirective, RangesDirective, RangeDirective, getRangeAddress, SpreadsheetPlugin } from '@syncfusion/ej2-vue-spreadsheet';
 import { mapGetters, mapActions } from 'vuex';
 import Nav from "@/components/NavBar.vue"
@@ -239,48 +212,7 @@ export default {
         },
 
       ],
-      desserts: [
-        {
-          name: 'FY-10-2023',
-          date: '18/04/2023',
-        },
-        {
-          name: 'FY-TB-2024',
-          date: '20/03/2024',
-        },
-        {
-          name: 'FY-22-TB-001',
-          date: '30/09/2023',
-        },
-        {
-          name: 'FY-12-TB-2019',
-          date: '25/01/2019',
-        },
-        {
-          name: 'FY-01-TB-2018',
-          date: '16/11/2018',
-        },
-        {
-          name: 'FY-01-TB-2017',
-          date: '5/08/2017',
-        },
-        {
-          name: 'FY-01-TB-2016',
-          date: '9/02/2016',
-        },
-        {
-          name: 'FY-04-TB-2015',
-          date: '3/08/2015',
-        },
-        {
-          name: 'FY-03-TB-2013',
-          date: '20/09/2013',
-        },
-        {
-          name: 'FY-01-TB-2012',
-          date: '12/05/2012',
-        },
-      ],
+      
     }
   },
   mounted() {
